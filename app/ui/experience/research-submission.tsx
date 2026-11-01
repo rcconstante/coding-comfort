@@ -18,7 +18,7 @@ export function ResearchSubmission({ locale }: { locale: Locale }) {
   const t = researchCopy[locale];
   const submit = useMutation(api.research.submitScreening);
   const [agreed, setAgreed] = useState(false);
-  const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "error">("idle");
   const [retry, setRetry] = useState(0);
   useEffect(() => {
     if (
@@ -86,8 +86,8 @@ export function ResearchSubmission({ locale }: { locale: Locale }) {
       </Info>
     );
   return (
-    <div className="surface research-save">
-      <p>{t.researchNotSaved}</p>
+    <details className="surface research-save privacy-details">
+      <summary>{t.shareResearch}</summary>
       <label className="consent-agree">
         <input
           type="checkbox"
@@ -107,6 +107,6 @@ export function ResearchSubmission({ locale }: { locale: Locale }) {
       >
         {t.saveConsent}
       </Button>
-    </div>
+    </details>
   );
 }

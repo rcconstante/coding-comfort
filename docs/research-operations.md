@@ -34,7 +34,7 @@ Participant submissions require the explicit current consent version and are ide
 
 The interface discloses Convex's selected region (US East, N. Virginia), submitted fields, researcher/Excel use, and retention until removal by the research team. Local-session clearing does not remove research submissions. The team must establish its approved retention/removal procedures before recruiting participants. No complete-anonymity or emergency-monitoring promise is made.
 
-Journal text remains in the browser. Nothing is sent to Claude. AI-generated reflections require a separate real integration and its corresponding consent.
+Journal text remains in browser local storage and is never uploaded. Gemini 3.1 Flash-Lite receives only three doubled DASS-21 scores after separate AI consent. Both languages and follow-up text are returned in one structured response. `GEMINI_API_KEY` belongs only in Convex environment secrets. `reflectionRequests` stores a SHA-256 session hash and timestamp, never the AI text, scores, individual answers, or journal. These markers are deliberately retained so old session keys cannot generate again. Shared limits allow 20 requests per minute and 500 per day; no automatic retries or provider fallback are performed. Failures consume the session attempt. An in-flight response may be lost on a full reload; the interface explains that it cannot be requested again in that session. Completed responses persist locally until End session or browser-data removal.
 
 ## Questionnaire editing
 

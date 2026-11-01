@@ -3,6 +3,8 @@
 import { useSyncExternalStore } from "react";
 import { calculateResults, isAnswer, type Answer, type Results } from "./dass";
 import { parseInstrument, type Instrument } from "./instrument";
+import { parseSavedReflection, type SavedReflection } from "./reflection";
+import { clearEvaluation } from "./use-evaluation";
 
 type Phase = "consent" | "intro" | "questions" | "completed";
 export type Session = {
@@ -19,6 +21,7 @@ export type Session = {
   researchSavedKey: string;
   participantCode: string;
   instrument: Instrument | null;
+  reflection: SavedReflection | null;
 };
 const key = "coding-comfort-session-v1";
 const empty: Session = {
@@ -35,6 +38,7 @@ const empty: Session = {
   researchSavedKey: "",
   participantCode: "",
   instrument: null,
+  reflection: null,
 };
 let snapshot = empty;
 let loaded = false;
@@ -90,6 +94,7 @@ export function parseSession(raw: string | null): Session {
           ? v.participantCode.slice(0, 32)
           : "",
       instrument: parseInstrument(v.instrument),
+      reflection: parseSavedReflection(v.reflection),
     };
   } catch {
     return empty;
@@ -99,7 +104,13 @@ function getSnapshot() {
   if (!loaded && typeof window !== "undefined") {
     loaded = true;
     try {
-      snapshot = parseSession(sessionStorage.getItem(key));
+      const stored = localStorage.getItem(key);
+      const legacy = stored === null ? sessionStorage.getItem(key) : null;
+      snapshot = parseSession(stored ?? legacy);
+      if (legacy) {
+        localStorage.setItem(key, JSON.stringify(snapshot));
+        sessionStorage.removeItem(key);
+      }
     } catch {
       storageError = true;
     }
@@ -108,23 +119,39 @@ function getSnapshot() {
 }
 function subscribe(listener: () => void) {
   listeners.add(listener);
+  const onStorage = (event: StorageEvent) => {
+    if (
+      event.storageArea === localStorage &&
+      (event.key === key || event.key === null)
+    ) {
+      snapshot = parseSession(event.newValue);
+      listener();
+    }
+  };
+  window.addEventListener("storage", onStorage);
   return () => {
     listeners.delete(listener);
+    window.removeEventListener("storage", onStorage);
   };
 }
 export function updateSession(change: Partial<Session>) {
   const next = { ...getSnapshot(), ...change };
   snapshot = next.consent ? next : { ...empty, answers: [...empty.answers] };
+  let saved = true;
   try {
-    sessionStorage.setItem(key, JSON.stringify(snapshot));
+    localStorage.setItem(key, JSON.stringify(snapshot));
   } catch {
     storageError = true;
+    saved = false;
   }
   listeners.forEach((listener) => listener());
+  return saved;
 }
 export function clearSession() {
+  clearEvaluation();
   snapshot = { ...empty, answers: [...empty.answers] };
   try {
+    localStorage.removeItem(key);
     sessionStorage.removeItem(key);
   } catch {
     storageError = true;
@@ -149,4 +176,30 @@ export function researchIdentity() {
   const submissionKey = current.submissionKey || crypto.randomUUID();
   updateSession({ participantToken, submissionKey });
   return { participantToken, submissionKey };
+}
+export function finishReflection(
+  submissionKey: string,
+  content: SavedReflection["content"],
+) {
+  let current = getSnapshot();
+  try {
+    current = parseSession(localStorage.getItem(key));
+  } catch {
+    storageError = true;
+  }
+  if (
+    current.consent &&
+    current.submissionKey === submissionKey &&
+    current.reflection?.submissionKey === submissionKey &&
+    (content !== null || current.reflection.status !== "ready")
+  ) {
+    snapshot = current;
+    updateSession({
+      reflection: {
+        submissionKey,
+        status: content ? "ready" : "error",
+        content,
+      },
+    });
+  }
 }

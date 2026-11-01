@@ -75,6 +75,10 @@ export default defineSchema({
     startedAt: v.number(),
     count: v.number(),
   }).index("by_key", ["key"]),
+  reflectionRequests: defineTable({
+    sessionHash: v.string(),
+    createdAt: v.number(),
+  }).index("by_session", ["sessionHash"]),
   instruments: defineTable({
     version: v.string(),
     questions: v.object({ en: v.array(v.string()), fil: v.array(v.string()) }),

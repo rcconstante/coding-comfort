@@ -1,25 +1,26 @@
 import type { Locale } from "./copy";
 const en = {
   researchOptIn:
-    "I also agree to save my screening responses and scores to Convex for researcher review and Excel analysis. This is optional.",
+    "I also agree to share my screening answers and scores with the research team. This is optional.",
   researchDetails:
-    "Research submissions include the 21 responses, three subscale scores, questionnaire version, language, date, and a pseudonymous participant code. They are stored in Convex (US East, N. Virginia) until removed by the research team. Journal entries are never uploaded. Ending this browser session does not delete research submissions. Contact the team with your participant code about your research data.",
+    "The research team receives your 21 answers, three scores, questionnaire version, language, date, and a participant code instead of your name. Records are stored in the United States until the team removes them. Your journal is never shared. Ending this session does not delete submitted records; contact the team with your participant code about removal.",
+  researchPrivacyTitle: "What will researchers receive?",
+  shareResearch: "Share with the research team (optional)",
   saving: "Saving your consented screening…",
   saved: "Saved for research",
   saveError:
     "Your results are safe in this browser, but could not be saved for research. Please try again.",
   retry: "Try again",
   participantCode: "Participant code",
-  researchNotSaved: "Your screening has not been shared with researchers.",
   saveConsent: "Agree and save my screening for research",
   evaluate: "Share Feedback",
   evaluationTitle: "How was your experience?",
   evaluationIntro:
     "Help the research team understand how the site works for you. This optional form is about the website, not a mental health assessment.",
   evaluationConsent:
-    "I agree to send these ratings, my optional comment, language, date, and a pseudonymous participant code to the research team in Convex for evaluation and Excel analysis.",
+    "I agree to share my ratings and optional comment with the research team.",
   evaluationDetails:
-    "Feedback is stored in Convex (US East, N. Virginia) until removed by the research team. Do not include names, contact details, or other identifying information. Your journal and screening answers are not attached to this form.",
+    "Your ratings, comment, language, date, and participant code are saved for research in the United States until the team removes them. Do not include names or contact details. Your journal and screening answers are not included.",
   comment: "Anything you would like us to improve? (optional)",
   submit: "Submit Feedback",
   submitting: "Submitting…",
@@ -37,26 +38,26 @@ const en = {
 };
 const fil: typeof en = {
   researchOptIn:
-    "Pumapayag din akong ipadala sa Convex ang aking mga sagot at score para masuri ng mga researcher at maisama sa Excel analysis. Opsyonal ito.",
+    "Pumapayag din akong ibahagi sa research team ang mga sagot at score ko. Opsyonal ito.",
   researchDetails:
-    "Kasama sa research submission ang 21 sagot, tatlong subscale score, bersyon ng questionnaire, wika, petsa, at participant code na hindi gumagamit ng pangalan. Nakaimbak ito sa Convex (US East, N. Virginia) hanggang alisin ng research team. Hindi ina-upload ang journal. Hindi nabubura ang research submission kapag tinapos ang browser session. Kontakin ang team gamit ang participant code kung may tanong tungkol sa iyong datos.",
+    "Matatanggap ng research team ang 21 sagot, tatlong score, bersyon ng questionnaire, wika, petsa, at participant code sa halip na pangalan. Nakaimbak ito sa United States hanggang alisin ng team. Hindi ibinabahagi ang journal. Hindi nabubura ang naipadalang tala kapag tinapos ang session; kontakin ang team gamit ang participant code tungkol sa pagbura nito.",
+  researchPrivacyTitle: "Ano ang matatanggap ng researcher?",
+  shareResearch: "Ibahagi sa research team (opsyonal)",
   saving: "Sine-save ang screening na pinayagan mo…",
   saved: "Na-save para sa pananaliksik",
   saveError:
     "Nasa browser pa ang iyong mga resulta, pero hindi ito na-save para sa pananaliksik. Pakisubukang muli.",
   retry: "Subukang muli",
   participantCode: "Participant code",
-  researchNotSaved:
-    "Hindi pa naibabahagi sa mga researcher ang iyong screening.",
   saveConsent: "Pumayag at i-save ang screening para sa pananaliksik",
   evaluate: "Magbigay ng Feedback",
   evaluationTitle: "Kumusta ang iyong karanasan?",
   evaluationIntro:
     "Tulungan ang research team na maunawaan ang karanasan mo sa site. Opsyonal ang form na ito at tungkol ito sa website, hindi pagsusuri sa kalusugang pangkaisipan.",
   evaluationConsent:
-    "Pumapayag akong ipadala sa research team sa Convex ang mga rating, opsyonal na komento, wika, petsa, at participant code para sa evaluation at Excel analysis.",
+    "Pumapayag akong ibahagi sa research team ang mga rating at opsyonal na komento ko.",
   evaluationDetails:
-    "Nakaimbak ang feedback sa Convex (US East, N. Virginia) hanggang alisin ng research team. Huwag magsama ng pangalan, kontak, o impormasyong makakakilala sa iyo. Hindi kasama rito ang iyong journal o mga sagot sa screening.",
+    "Naka-save para sa research sa United States ang mga rating, komento, wika, petsa, at participant code hanggang alisin ng team. Huwag magsama ng pangalan o contact details. Hindi kasama ang journal o mga sagot sa screening.",
   comment: "Ano ang maaari pa naming pagbutihin? (opsyonal)",
   submit: "Ipadala ang Feedback",
   submitting: "Ipinapadala…",

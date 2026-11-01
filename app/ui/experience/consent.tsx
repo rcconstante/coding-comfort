@@ -43,7 +43,10 @@ export function Consent({ locale }: { locale: Locale }) {
           />
           {researchCopy[locale].researchOptIn}
         </label>
-        <p>{researchCopy[locale].researchDetails}</p>
+        <details className="privacy-details">
+          <summary>{researchCopy[locale].researchPrivacyTitle}</summary>
+          <p>{researchCopy[locale].researchDetails}</p>
+        </details>
       </div>
       <label className="consent-agree" htmlFor={checkboxId}>
         <input

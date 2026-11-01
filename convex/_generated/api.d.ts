@@ -13,6 +13,7 @@ import type * as bootstrap from "../bootstrap.js";
 import type * as http from "../http.js";
 import type * as instruments from "../instruments.js";
 import type * as permissions from "../permissions.js";
+import type * as reflection from "../reflection.js";
 import type * as research from "../research.js";
 import type * as researchers from "../researchers.js";
 
@@ -28,6 +29,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   instruments: typeof instruments;
   permissions: typeof permissions;
+  reflection: typeof reflection;
   research: typeof research;
   researchers: typeof researchers;
 }>;

@@ -1,5 +1,31 @@
 @import "tailwindcss";
 
+.gemini-consent {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+.gemini-consent p {
+  margin: 0;
+}
+.gemini-consent .pill-button {
+  justify-self: start;
+}
+.gemini-consent .consent-agree {
+  align-items: start;
+}
+.privacy-details summary {
+  cursor: pointer;
+  color: var(--foreground);
+  font-weight: 600;
+}
+.privacy-details[open] > summary {
+  margin-bottom: 14px;
+}
+.research-save > .consent-agree {
+  margin-top: 16px;
+}
+
 :root {
   --background: #f5f1f8;
   --foreground: #30213f;

@@ -1,8 +1,8 @@
 "use client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { useSession } from "../../lib/use-session";
+import { useSession, updateSession } from "../../lib/use-session";
 import { researchCopy } from "../../lib/research-copy";
 import {
   EVALUATION_QUESTIONS,
@@ -12,17 +12,16 @@ import {
 import type { Locale } from "../../lib/copy";
 import { ActionLink, PageHeading } from "./shared";
 import { Button } from "../button";
+import { useEvaluation, updateEvaluation } from "../../lib/use-evaluation";
 export function Evaluation({ locale }: { locale: Locale }) {
   const t = researchCopy[locale];
   const { session } = useSession();
   const submit = useMutation(api.research.submitEvaluation);
-  const [agreed, setAgreed] = useState(false);
-  const [ratings, setRatings] = useState<number[]>([0, 0, 0]);
-  const [comment, setComment] = useState("");
+  const draft = useEvaluation();
+  const { agreed, ratings, comment } = draft;
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">(
     "idle",
   );
-  const identity = useRef<{ token: string; key: string } | null>(null);
   async function send(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!agreed) return;
@@ -32,15 +31,18 @@ export function Evaluation({ locale }: { locale: Locale }) {
       setStatus("error");
       return;
     }
-    identity.current ??= {
-      token: session.participantToken || crypto.randomUUID(),
-      key: crypto.randomUUID(),
+    const identity = {
+      token: draft.token || session.participantToken || crypto.randomUUID(),
+      key: draft.submissionKey || crypto.randomUUID(),
     };
+    updateEvaluation({ token: identity.token, submissionKey: identity.key });
+    if (session.consent && !session.participantToken)
+      updateSession({ participantToken: identity.token });
     setStatus("saving");
     try {
       await submit({
-        token: identity.current.token,
-        submissionKey: identity.current.key,
+        token: identity.token,
+        submissionKey: identity.key,
         locale,
         consent: true,
         consentVersion: FEEDBACK_CONSENT_VERSION,
@@ -50,11 +52,12 @@ export function Evaluation({ locale }: { locale: Locale }) {
         comment,
       });
       setStatus("done");
+      updateEvaluation({ submitted: true });
     } catch {
       setStatus("error");
     }
   }
-  if (status === "done")
+  if (status === "done" || draft.submitted)
     return (
       <div className="surface evaluation-complete">
         <PageHeading
@@ -81,7 +84,9 @@ export function Evaluation({ locale }: { locale: Locale }) {
             <input
               type="checkbox"
               checked={agreed}
-              onChange={(event) => setAgreed(event.target.checked)}
+              onChange={(event) =>
+                updateEvaluation({ agreed: event.target.checked })
+              }
             />
             {t.evaluationConsent}
           </label>
@@ -107,11 +112,11 @@ export function Evaluation({ locale }: { locale: Locale }) {
                       required
                       checked={ratings[index] === value}
                       onChange={() =>
-                        setRatings(
-                          ratings.map((previous, i) =>
+                        updateEvaluation({
+                          ratings: ratings.map((previous, i) =>
                             i === index ? value : previous,
                           ),
-                        )
+                        })
                       }
                     />
                     <span>{value}</span>
@@ -130,7 +135,9 @@ export function Evaluation({ locale }: { locale: Locale }) {
               maxLength={2000}
               rows={5}
               value={comment}
-              onChange={(event) => setComment(event.target.value)}
+              onChange={(event) =>
+                updateEvaluation({ comment: event.target.value })
+              }
             />
           </label>
         </fieldset>

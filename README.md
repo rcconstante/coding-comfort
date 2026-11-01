@@ -41,9 +41,19 @@ See [research operations](docs/research-operations.md) for account provisioning,
 
 ## Consent and data
 
-By default, screening/journal drafts stay in the current tab's `sessionStorage`. Optional research consent allows the 21 screening responses, separately computed scores, questionnaire version, language, timestamp, and pseudonymous session code to be saved in Convex. Journals are never uploaded. Feedback has separate consent and does not attach journal text or screening answers.
+Screening answers, results, journals, small-step plans, feedback drafts, and AI reflections persist in browser `localStorage`. Existing tab sessions migrate automatically. No participant account is needed. Optional research consent allows the 21 screening responses, separately computed scores, questionnaire version, language, timestamp, and pseudonymous session code to be saved in Convex. Journals are never uploaded. Feedback has separate consent and does not attach journal text or screening answers.
 
-End session clears local drafts only. It does not delete already-consented research submissions. Participant counts represent consenting browser sessions, not verified unique people. AI reflection remains unavailable; the application never fabricates a Claude response or diagnosis.
+End session clears local data, including feedback drafts and AI reflections. It does not delete already-consented research submissions. Participant counts represent consenting browser sessions, not verified unique people.
+
+## Gemini reflection
+
+With separate AI consent, the public reflection action sends only the three doubled scores to Gemini 3.1 Flash-Lite. The backend derives each severity independently. One structured response includes English and Filipino explanations, one or two self-care steps, referral guidance, and a further explanation. Follow-up controls reuse that response.
+
+Configure `GEMINI_API_KEY` as a **Convex environment secret**, never a `NEXT_PUBLIC_` variable. The key is not stored in browser storage or source code. Atomic hashed-session claims prevent concurrent/replayed requests. There are no automatic model retries, including on failures. A new screening or explicitly ended session starts a new request allowance. The response is stored only in the browser; Convex stores the one-way session hash and request time, not the AI text or scores. Basic shared limits cap model requests at 20/minute and 500/day.
+
+Keep the page open until generation finishes. Reloading during generation can lose the in-flight response; it deliberately does not start another model call. Saved reflections survive reloads and language switches. If local storage is unavailable, generation is disabled. Research-storage consent remains separate from AI consent.
+
+See [PDF feature alignment](docs/pdf-feature-alignment.md) for the source-guide review and the explicitly requested Gemini substitution for Claude.
 
 ## Validation
 

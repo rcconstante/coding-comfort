@@ -76,7 +76,11 @@ export function Screening({ locale }: { locale: Locale }) {
                   session.participantToken ||
                   (session.researchConsent ? crypto.randomUUID() : ""),
                 ...(session.phase === "completed"
-                  ? { answers: Array(21).fill(null), question: 0 }
+                  ? {
+                      answers: Array(21).fill(null),
+                      question: 0,
+                      reflection: null,
+                    }
                   : {}),
               })
             }

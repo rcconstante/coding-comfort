@@ -9,6 +9,7 @@ import { Asset, ActionLink, Info, PageHeading } from "./shared";
 import { Button } from "../button";
 import { ResearchSubmission } from "./research-submission";
 import { researchCopy } from "../../lib/research-copy";
+import { GeminiReflection } from "./gemini-reflection";
 
 const images = {
   depression: "depression",
@@ -78,7 +79,6 @@ export function ResultsPage({ locale }: { locale: Locale }) {
   if (!results) return <EmptyResults locale={locale} />;
   return (
     <>
-      <ResearchSubmission locale={locale} />
       <PageHeading
         asset="graph"
         title={t.resultsTitle}
@@ -148,6 +148,7 @@ export function ResultsPage({ locale }: { locale: Locale }) {
           {t.home}
         </ActionLink>
       </div>
+      <ResearchSubmission locale={locale} />
     </>
   );
 }
@@ -167,6 +168,11 @@ export function Reflection({ locale }: { locale: Locale }) {
   const [tab, setTab] = useState(0);
   const [detail, setDetail] = useState(false);
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
+  const reflection =
+    session.reflection?.submissionKey === session.submissionKey &&
+    session.reflection.status === "ready"
+      ? session.reflection.content?.[locale]
+      : null;
   if (!results) return <EmptyResults locale={locale} />;
   return (
     <>
@@ -221,7 +227,7 @@ export function Reflection({ locale }: { locale: Locale }) {
             <Asset name="robot" size={160} className="reflection-robot" />
             <div>
               <h2>{t.reflectionHeading}</h2>
-              <p>{t.summaryIntro}</p>
+              <p>{reflection?.summary ?? t.summaryIntro}</p>
               <ul className="reflection-scores">
                 {subscales.map((key) => (
                   <li key={key}>
@@ -235,25 +241,59 @@ export function Reflection({ locale }: { locale: Locale }) {
                   </li>
                 ))}
               </ul>
-              <Info>{t.aiUnavailable}</Info>
+              {reflection &&
+                subscales.map((key) => (
+                  <p key={key}>
+                    <strong>{t[key]}: </strong>
+                    {reflection[key]}
+                  </p>
+                ))}
+              <GeminiReflection locale={locale} />
             </div>
           </>
         ) : (
           <div className="referral-summary">
             <h2>{t.tabs[tab]}</h2>
-            {subscales.map((key) => (
-              <section key={key}>
-                <h3>
-                  {t[key]} · {t[results[key].severity]}
-                </h3>
-                <p>{recommendation(results[key].severity, t)}</p>
-              </section>
-            ))}
-            {tab === 2 && <Info>{t.referralNotice}</Info>}
+            {reflection &&
+              (tab === 1 ? (
+                <ul className="dot-list">
+                  {reflection.steps.map((step, index) => (
+                    <li key={index}>{step}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{reflection.referral}</p>
+              ))}
+            {!reflection &&
+              subscales.map((key) => (
+                <section key={key}>
+                  <h3>
+                    {t[key]} · {t[results[key].severity]}
+                  </h3>
+                  <p>{recommendation(results[key].severity, t)}</p>
+                </section>
+              ))}
+            {tab === 2 && (
+              <>
+                <Info>{t.referralNotice}</Info>
+                <ActionLink href="/support?view=resources" locale={locale}>
+                  {t.support}
+                </ActionLink>
+              </>
+            )}
           </div>
         )}
       </section>
-      {detail && <ScoreDetails results={results} t={t} />}
+      {detail && (
+        <>
+          {reflection && (
+            <div className="surface score-details">
+              <p>{reflection.further}</p>
+            </div>
+          )}
+          <ScoreDetails results={results} t={t} />
+        </>
+      )}
       <div className="form-actions centered reflection-actions">
         <Button
           className="pill-button pill-secondary"

@@ -7,12 +7,12 @@ const en = {
     "You may stop at any time.",
     "Coding Comfort is a research prototype.",
     "The DASS-21 is a screening instrument, not a diagnostic tool.",
-    "AI may process information voluntarily submitted by the participant, only with additional consent when available.",
+    "AI may explain your screening scores if you give separate permission.",
     "Please avoid including your name, address, phone number, or other unnecessary identifying information in free-text entries.",
     "The application is not an emergency service.",
   ],
   privacy:
-    "Your journal and screening drafts stay in this browser tab by default. Screening responses are saved to Convex only with the separate, optional research consent below. Journals are never uploaded, and no information is sent to Claude. Clearing local data does not delete research submissions.",
+    "Your progress and journal stay on this device until you end the session or clear browser data. Sharing scores with AI or responses with researchers is optional and requires separate permission.",
   endSession: "End session and clear local data",
   agree:
     "I have read and understood the information above and voluntarily agree to continue.",
@@ -47,7 +47,7 @@ const en = {
   restartScreening: "Start a New Screening",
   stop: "Stop screening",
   stopBody:
-    "You can leave now and return to your current question in this browser tab.",
+    "You can leave now and return to your current question in this browser. Progress stays until you end the session or clear browser data.",
   resultsTitle: "My Results",
   resultsIntro: "Here is a summary of your DASS-21 scores.",
   depression: "Depression",
@@ -85,8 +85,6 @@ const en = {
   reflectionHeading: "A Supportive Reflection for You",
   summaryIntro:
     "Your reported experiences over the past week are summarized below. Each area is considered separately.",
-  aiUnavailable:
-    "AI reflection is not available right now. This summary is based directly on your screening scores and is not AI-generated.",
   oversight:
     "AI-generated reflections support understanding and self-reflection. They do not replace professional judgment. Diagnosis, treatment, and clinical-care decisions belong to qualified healthcare professionals.",
   finishReflection: "Finish Reflection",
@@ -153,7 +151,7 @@ const en = {
     "What am I feeling right now, and what is one thing I need today?",
   journalLabel: "Your reflection",
   journalPlaceholder: "Take your time. Start wherever feels right…",
-  journalSaved: "Draft kept in this browser tab",
+  journalSaved: "Draft saved in this browser",
   characters: "characters",
   draftEmpty: "Your journal is ready whenever you are.",
   plannerIntro:
@@ -222,12 +220,12 @@ const fil: typeof en = {
     "Maaari kang huminto anumang oras.",
     "Ang Coding Comfort ay isang prototype para sa pananaliksik.",
     "Ang DASS-21 ay kasangkapan sa screening, hindi sa diagnosis.",
-    "Maaaring iproseso ng AI ang kusang-loob mong ibinahaging impormasyon kung may hiwalay na pahintulot kapag available na ito.",
+    "Maaaring ipaliwanag ng AI ang mga score mo kung may hiwalay kang pahintulot.",
     "Iwasang isama ang iyong pangalan, tirahan, numero ng telepono, o iba pang hindi kailangang impormasyong makakakilala sa iyo.",
     "Hindi serbisyong pang-emergency ang application.",
   ],
   privacy:
-    "Sa browser tab lamang nananatili ang journal at screening draft bilang default. Mase-save lamang sa Convex ang mga sagot kung may hiwalay at opsyonal na research consent sa ibaba. Hindi ina-upload ang journal at walang ipinapadala sa Claude. Hindi nabubura ang research submission kapag binura ang lokal na datos.",
+    "Nananatili sa device na ito ang progreso at journal hanggang tapusin ang session o burahin ang browser data. Opsyonal at may hiwalay na pahintulot ang pagbabahagi ng score sa AI o mga sagot sa researcher.",
   endSession: "Tapusin ang session at burahin ang lokal na datos",
   agree:
     "Nabasa at naunawaan ko ang impormasyon sa itaas at kusang-loob akong pumapayag na magpatuloy.",
@@ -262,7 +260,7 @@ const fil: typeof en = {
   restartScreening: "Magsimula ng Bagong Screening",
   stop: "Huminto sa screening",
   stopBody:
-    "Maaari kang lumabas at balikan ang kasalukuyang tanong sa browser tab na ito.",
+    "Maaari kang lumabas at balikan ang kasalukuyang tanong sa browser na ito. Nananatili ang progreso hanggang tapusin ang session o burahin ang browser data.",
   resultsTitle: "Mga Resulta Ko",
   resultsIntro: "Narito ang buod ng iyong mga score sa DASS-21.",
   depression: "Depresyon",
@@ -300,8 +298,6 @@ const fil: typeof en = {
   reflectionHeading: "Isang Pagninilay na May Malasakit",
   summaryIntro:
     "Narito ang buod ng iyong iniulat na karanasan nitong nakaraang linggo. Magkahiwalay na isinasaalang-alang ang bawat aspeto.",
-  aiUnavailable:
-    "Hindi available ang AI reflection sa ngayon. Ang buod na ito ay direktang batay sa iyong mga score at hindi ginawa ng AI.",
   oversight:
     "Ang AI-generated reflections ay gabay sa pag-unawa at pagninilay lamang. Hindi nito pinapalitan ang propesyonal na paghatol. Kwalipikadong propesyonal sa kalusugan ang dapat magpasya tungkol sa diagnosis, paggamot, at klinikal na pangangalaga.",
   finishReflection: "Tapusin ang Pagninilay",
@@ -368,7 +364,7 @@ const fil: typeof en = {
     "Ano ang nararamdaman ko ngayon, at ano ang isang bagay na kailangan ko ngayong araw?",
   journalLabel: "Ang iyong pagninilay",
   journalPlaceholder: "Huwag magmadali. Magsimula kung saan ka komportable…",
-  journalSaved: "Nananatili ang draft sa browser tab na ito",
+  journalSaved: "Naka-save ang draft sa browser na ito",
   characters: "karakter",
   draftEmpty: "Nandito ang iyong journal kapag handa ka na.",
   plannerIntro:
