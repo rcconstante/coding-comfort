@@ -13,6 +13,7 @@ import { researchCopy } from "../../lib/research-copy";
 import type { Locale } from "../../lib/copy";
 import { Info } from "./shared";
 import { Button } from "../button";
+import Link from "next/link";
 export function ResearchSubmission({ locale }: { locale: Locale }) {
   const { session } = useSession();
   const t = researchCopy[locale];
@@ -88,25 +89,29 @@ export function ResearchSubmission({ locale }: { locale: Locale }) {
   return (
     <details className="surface research-save privacy-details">
       <summary>{t.shareResearch}</summary>
-      <label className="consent-agree">
-        <input
-          type="checkbox"
-          checked={agreed}
-          onChange={(event) => setAgreed(event.target.checked)}
-        />
-        {t.researchOptIn}
-      </label>
-      <p>{t.researchDetails}</p>
-      <Button
-        className="pill-button"
-        disabled={!agreed}
-        onClick={() => {
-          researchIdentity();
-          updateSession({ researchConsent: true });
-        }}
-      >
-        {t.saveConsent}
-      </Button>
+      <div className="research-sharing-content">
+        <label className="consent-agree">
+          <input
+            type="checkbox"
+            checked={agreed}
+            onChange={(event) => setAgreed(event.target.checked)}
+          />
+          {t.researchOptIn}
+        </label>
+        <Link className="privacy-link" href={`/privacy?lang=${locale}`}>
+          {t.researchPrivacyTitle}
+        </Link>
+        <Button
+          className="pill-button"
+          disabled={!agreed}
+          onClick={() => {
+            researchIdentity();
+            updateSession({ researchConsent: true });
+          }}
+        >
+          {t.saveConsent}
+        </Button>
+      </div>
     </details>
   );
 }

@@ -16,7 +16,7 @@ const assets = {
   results: "graph",
   "self-care": "leave",
   support: "heart",
-};
+} as const;
 export function FeatureCards({ locale }: { locale: Locale }) {
   const t = featureCopy[locale];
   const { session } = useSession();
@@ -58,7 +58,7 @@ export function FeatureCards({ locale }: { locale: Locale }) {
                 </Button>
               ) : (
                 <Button asChild className="feature-action">
-                  <Link href={`/${section}?lang=${locale}`}>
+                  <Link href={`/${section}?lang=${locale}`} prefetch={true}>
                     {feature.action}
                     <HugeiconsIcon
                       icon={ArrowRight01Icon}

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { copy, type Locale } from "../lib/copy";
 import { featureCopy, type Section } from "../lib/features";
 import { ResultsNavLink } from "./results-nav-link";
+import { HeaderNavigation } from "./header-navigation";
+import logo from "../../public/header-logo.webp";
 
 export function SiteHeader({
   locale,
@@ -69,7 +71,7 @@ export function SiteHeader({
             aria-label="Coding Comfort"
           >
             <Image
-              src="/header-logo.png"
+              src={logo}
               alt="Coding Comfort"
               width={1250}
               height={425}
@@ -77,12 +79,7 @@ export function SiteHeader({
               priority
             />
           </Link>
-          <nav
-            className="header-nav"
-            aria-label={
-              locale === "fil" ? "Pangunahing nabigasyon" : "Main navigation"
-            }
-          >
+          <HeaderNavigation key={`${path}:${locale}`} locale={locale}>
             <ul>
               {items.map((item) => (
                 <li key={item.href}>
@@ -96,6 +93,7 @@ export function SiteHeader({
                     </ResultsNavLink>
                   ) : (
                     <Link
+                      prefetch={true}
                       className="nav-link"
                       href={`${item.href}?lang=${locale}`}
                       aria-current={item.active ? "page" : undefined}
@@ -106,9 +104,10 @@ export function SiteHeader({
                 </li>
               ))}
             </ul>
-          </nav>
+          </HeaderNavigation>
           <nav className="language-switch" aria-label={t.language}>
             <Link
+              prefetch={true}
               href={languageHref("en")}
               lang="en"
               hrefLang="en"
@@ -118,6 +117,7 @@ export function SiteHeader({
               EN
             </Link>
             <Link
+              prefetch={true}
               href={languageHref("fil")}
               lang="fil"
               hrefLang="fil"

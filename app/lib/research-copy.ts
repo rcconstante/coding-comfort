@@ -1,10 +1,20 @@
 import type { Locale } from "./copy";
 const en = {
   researchOptIn:
-    "I also agree to share my screening answers and scores with the research team. This is optional.",
+    "I agree to share my 21 answers and scores for research, using a participant code instead of my name.",
   researchDetails:
     "The research team receives your 21 answers, three scores, questionnaire version, language, date, and a participant code instead of your name. Records are stored in the United States until the team removes them. Your journal is never shared. Ending this session does not delete submitted records; contact the team with your participant code about removal.",
-  researchPrivacyTitle: "What will researchers receive?",
+  researchPrivacyTitle: "Privacy details",
+  privacyTitle: "Research privacy",
+  privacyChoiceTitle: "Your choice",
+  privacyChoice:
+    "You can use the screening without sharing your responses with the research team.",
+  privacyRecords: "Research records",
+  privacyRemovalTitle: "Questions or removal requests",
+  privacyRemoval:
+    "Contact the team with the participant code shown after saving.",
+  privacyContact: "Contact the team",
+  backToResults: "Back to results",
   shareResearch: "Share with the research team (optional)",
   saving: "Saving your consented screening…",
   saved: "Saved for research",
@@ -38,10 +48,20 @@ const en = {
 };
 const fil: typeof en = {
   researchOptIn:
-    "Pumapayag din akong ibahagi sa research team ang mga sagot at score ko. Opsyonal ito.",
+    "Pumapayag akong ibahagi ang 21 sagot at score ko para sa pananaliksik, gamit ang participant code sa halip na pangalan.",
   researchDetails:
     "Matatanggap ng research team ang 21 sagot, tatlong score, bersyon ng questionnaire, wika, petsa, at participant code sa halip na pangalan. Nakaimbak ito sa United States hanggang alisin ng team. Hindi ibinabahagi ang journal. Hindi nabubura ang naipadalang tala kapag tinapos ang session; kontakin ang team gamit ang participant code tungkol sa pagbura nito.",
-  researchPrivacyTitle: "Ano ang matatanggap ng researcher?",
+  researchPrivacyTitle: "Detalye sa privacy",
+  privacyTitle: "Privacy sa pananaliksik",
+  privacyChoiceTitle: "Ikaw ang magpapasya",
+  privacyChoice:
+    "Maaari mong gamitin ang screening nang hindi nagbabahagi ng mga sagot sa research team.",
+  privacyRecords: "Mga tala sa pananaliksik",
+  privacyRemovalTitle: "Mga tanong o kahilingan sa pagbura",
+  privacyRemoval:
+    "Kontakin ang team at ibigay ang participant code na ipinapakita pagkatapos mag-save.",
+  privacyContact: "Kontakin ang team",
+  backToResults: "Bumalik sa mga resulta",
   shareResearch: "Ibahagi sa research team (opsyonal)",
   saving: "Sine-save ang screening na pinayagan mo…",
   saved: "Na-save para sa pananaliksik",

@@ -6,10 +6,17 @@ import { SiteHeader } from "../ui/site-chrome";
 import { FeatureCards } from "../ui/feature-cards";
 import { SessionControls } from "../ui/session-controls";
 import Link from "next/link";
+import { cacheLife } from "next/cache";
+import type { Locale } from "../lib/copy";
 
 export const metadata = { title: "Explore | Coding Comfort" };
 async function DashboardContent({ searchParams }: { searchParams: PageQuery }) {
   const locale = getLocale(await searchParams);
+  return <DashboardView locale={locale} />;
+}
+async function DashboardView({ locale }: { locale: Locale }) {
+  "use cache";
+  cacheLife("hours");
   return (
     <div className="site" lang={locale}>
       <SiteHeader locale={locale} current="dashboard" />
@@ -30,13 +37,7 @@ export default function Dashboard({
   searchParams: PageQuery;
 }) {
   return (
-    <Suspense
-      fallback={
-        <main className="page-loading" aria-busy="true">
-          Coding Comfort…
-        </main>
-      }
-    >
+    <Suspense fallback={null}>
       <DashboardContent searchParams={searchParams} />
     </Suspense>
   );

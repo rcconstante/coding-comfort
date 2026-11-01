@@ -12,7 +12,7 @@ import { ui } from "../../lib/experience-copy";
 import type { Locale } from "../../lib/copy";
 import { activities, type Activity } from "../../lib/activities";
 
-const activityImages = ["breath", "grounding-act", "guide-journaling", "heart"];
+const activityImages = ["breath", "grounding-act", "guide-journaling", "heart"] as const;
 
 function Breathing({ locale }: { locale: Locale }) {
   const t = ui[locale];
@@ -279,7 +279,8 @@ export function SelfCare({
   activity?: Activity;
 }) {
   const t = ui[locale];
-  const { session } = useSession();
+  const { session, ready } = useSession();
+  if (activity && !ready) return null;
   if ((activity === "journal" || activity === "steps") && !session.consent)
     return <Consent locale={locale} />;
   if (!activity)

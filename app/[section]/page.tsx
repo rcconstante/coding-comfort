@@ -9,6 +9,9 @@ import { ResultsPage, Reflection } from "../ui/experience/results";
 import { SelfCare } from "../ui/experience/self-care";
 import { activities, type Activity } from "../lib/activities";
 import { Contact, Support, type SupportView } from "../ui/experience/support";
+import { ResearchPrivacy } from "../ui/experience/research-privacy";
+import { cacheLife } from "next/cache";
+import type { Locale } from "../lib/copy";
 
 type SectionProps = {
   params: Promise<{ section: string }>;
@@ -22,6 +25,7 @@ const validSections = [
   "support",
   "contact",
   "evaluation",
+  "privacy",
 ];
 async function SectionContent({ params, searchParams }: SectionProps) {
   const [{ section }, query] = await Promise.all([params, searchParams]);
@@ -37,8 +41,18 @@ async function SectionContent({ params, searchParams }: SectionProps) {
     ["resources", "referral", "crisis"].includes(query.view)
       ? (query.view as SupportView)
       : undefined;
+  return <SectionView section={section} locale={locale} activity={activity} view={view} />;
+}
+async function SectionView({ section, locale, activity, view }: {
+  section: string;
+  locale: Locale;
+  activity?: Activity;
+  view?: SupportView;
+}) {
+  "use cache";
+  cacheLife("hours");
   const current =
-    section === "reflection" || section === "evaluation"
+    section === "reflection" || section === "evaluation" || section === "privacy"
       ? "results"
       : section === "contact"
         ? "support"
@@ -55,7 +69,9 @@ async function SectionContent({ params, searchParams }: SectionProps) {
         id="main-content"
         className={`experience-main page-width experience-${section}`}
       >
-        {section === "evaluation" ? (
+        {section === "privacy" ? (
+          <ResearchPrivacy locale={locale} />
+        ) : section === "evaluation" ? (
           <Evaluation locale={locale} />
         ) : section === "screening" ? (
           <Screening locale={locale} />
@@ -77,13 +93,7 @@ async function SectionContent({ params, searchParams }: SectionProps) {
 }
 export default function SectionPage(props: SectionProps) {
   return (
-    <Suspense
-      fallback={
-        <main className="page-loading" aria-busy="true">
-          Coding Comfort…
-        </main>
-      }
-    >
+    <Suspense fallback={null}>
       <SectionContent {...props} />
     </Suspense>
   );

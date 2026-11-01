@@ -22,6 +22,7 @@ import {
   validatePasswordChange,
 } from "../lib/research-validation";
 import type { Instrument } from "../lib/instrument";
+import logo from "../../public/header-logo.webp";
 
 function errorText(error: unknown) {
   return error instanceof ConvexError && typeof error.data === "string"
@@ -32,7 +33,7 @@ function Logo() {
   return (
     <Link href="/" aria-label="Coding Comfort home">
       <Image
-        src="/header-logo.png"
+        src={logo}
         alt="Coding Comfort"
         width={170}
         height={58}

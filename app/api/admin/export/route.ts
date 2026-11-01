@@ -12,26 +12,28 @@ import {
   isCalendarDate,
 } from "../../../lib/research-validation";
 
+const privateHeaders = { "Cache-Control": "private, no-store" };
+
 export const maxDuration = 60;
 export async function GET(request: NextRequest) {
   const token = await convexAuthNextjsToken();
   if (!token)
     return NextResponse.json(
       { error: "Authentication required." },
-      { status: 401 },
+      { status: 401, headers: privateHeaders },
     );
   try {
     const user = await fetchQuery(api.researchers.me, {}, { token });
     if (!user || user.mustChangePassword)
       return NextResponse.json(
         { error: "Researcher access required." },
-        { status: 403 },
+        { status: 403, headers: privateHeaders },
       );
     const kind = request.nextUrl.searchParams.get("kind");
     if (kind !== "screenings" && kind !== "feedback")
       return NextResponse.json(
         { error: "Choose screenings or feedback." },
-        { status: 400 },
+        { status: 400, headers: privateHeaders },
       );
     const fromText = request.nextUrl.searchParams.get("from");
     const toText = request.nextUrl.searchParams.get("to");
@@ -40,7 +42,7 @@ export async function GET(request: NextRequest) {
         (value) => value !== null && !isCalendarDate(value),
       )
     )
-      return NextResponse.json({ error: "Invalid dates." }, { status: 400 });
+      return NextResponse.json({ error: "Invalid dates." }, { status: 400, headers: privateHeaders });
     const from = fromText
         ? Date.parse(`${fromText}T00:00:00+08:00`)
         : undefined,
@@ -52,7 +54,7 @@ export async function GET(request: NextRequest) {
     )
       return NextResponse.json(
         { error: "Invalid date range." },
-        { status: 400 },
+        { status: 400, headers: privateHeaders },
       );
     type ExportSheet = {
       name: string;
@@ -262,7 +264,7 @@ export async function GET(request: NextRequest) {
             ? "Use a narrower date range (maximum 20,000 rows and 100 questionnaire versions per export)."
             : "Export could not be completed.",
       },
-      { status: 400, headers: { "Cache-Control": "private, no-store" } },
+      { status: 400, headers: privateHeaders },
     );
   }
 }

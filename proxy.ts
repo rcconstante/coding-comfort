@@ -13,7 +13,7 @@ export default convexAuthNextjsMiddleware(
     )
       return NextResponse.json(
         { error: "Request not allowed." },
-        { status: 403 },
+        { status: 403, headers: { "Cache-Control": "no-store" } },
       );
     if (
       path.startsWith("/admin") &&
@@ -25,7 +25,5 @@ export default convexAuthNextjsMiddleware(
   { cookieConfig: { maxAge: 60 * 60 * 8 } },
 );
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.png|.*\\.(?:png|ico|svg|pdf)$).*)",
-  ],
+  matcher: ["/admin/:path*", "/api/:path*"],
 };

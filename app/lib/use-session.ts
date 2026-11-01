@@ -159,8 +159,8 @@ export function clearSession() {
   listeners.forEach((listener) => listener());
 }
 export function useSession() {
-  const session = useSyncExternalStore(subscribe, getSnapshot, () => empty);
-  return { session, storageError };
+  const stored = useSyncExternalStore(subscribe, getSnapshot, () => null);
+  return { session: stored ?? empty, storageError, ready: stored !== null };
 }
 export function sessionResults(session: Session): Results | null {
   if (!session.consent || session.phase !== "completed") return null;

@@ -7,22 +7,24 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Button } from "../button";
 import type { Locale } from "../../lib/copy";
+import { illustrations, type Illustration } from "../../lib/illustrations";
 
 export function Asset({
   name,
   size = 48,
   className = "",
 }: {
-  name: string;
+  name: Illustration;
   size?: number;
   className?: string;
 }) {
   return (
     <Image
-      src={`/${name}.png`}
+      src={illustrations[name]}
       alt=""
       width={size}
       height={size}
+      sizes={`${size}px`}
       className={`ui-asset ${className}`}
     />
   );
@@ -32,7 +34,7 @@ export function PageHeading({
   title,
   description,
 }: {
-  asset: string;
+  asset: Illustration;
   title: string;
   description?: string;
 }) {
@@ -81,7 +83,7 @@ export function ActionLink({
       variant={secondary ? "ghost" : "default"}
       className={`pill-button ${secondary ? "pill-secondary" : ""}`}
     >
-      <Link href={`${href}${href.includes("?") ? "&" : "?"}lang=${locale}`}>
+      <Link href={`${href}${href.includes("?") ? "&" : "?"}lang=${locale}`} prefetch={true}>
         {children}
         <HugeiconsIcon icon={ArrowRight01Icon} size={16} aria-hidden="true" />
       </Link>

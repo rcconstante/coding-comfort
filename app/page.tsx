@@ -5,9 +5,18 @@ import { InformationCircleIcon } from "@hugeicons/core-free-icons";
 import { SiteHeader } from "./ui/site-chrome";
 import { Card, CardContent } from "./ui/card";
 import { copy, getLocale, type PageQuery } from "./lib/copy";
+import character from "../public/home.webp";
+import { cacheLife } from "next/cache";
+import type { Locale } from "./lib/copy";
 
 async function HomeContent({ searchParams }: { searchParams: PageQuery }) {
   const locale = getLocale(await searchParams);
+  return <Landing locale={locale} />;
+}
+
+async function Landing({ locale }: { locale: Locale }) {
+  "use cache";
+  cacheLife("hours");
   const t = copy[locale];
 
   return (
@@ -22,11 +31,11 @@ async function HomeContent({ searchParams }: { searchParams: PageQuery }) {
           </div>
           <Image
             className="hero-character"
-            src="/home.png"
+            src={character}
             alt={t.characterAlt}
             width={1162}
             height={1342}
-            sizes="(max-width: 600px) 75vw, 42vw"
+            sizes="(max-width: 600px) 75vw, (max-width: 1100px) 42vw, 440px"
             priority
           />
         </section>
@@ -49,13 +58,7 @@ async function HomeContent({ searchParams }: { searchParams: PageQuery }) {
 
 export default function Home({ searchParams }: { searchParams: PageQuery }) {
   return (
-    <Suspense
-      fallback={
-        <main className="page-loading" aria-busy="true">
-          Coding Comfort…
-        </main>
-      }
-    >
+    <Suspense fallback={null}>
       <HomeContent searchParams={searchParams} />
     </Suspense>
   );

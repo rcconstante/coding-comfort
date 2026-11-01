@@ -23,7 +23,7 @@ export function Support({
   const { session } = useSession();
   const results = sessionResults(session);
   const views = ["resources", "referral", "crisis"] as const;
-  const images = ["help", "referral", "crisis"];
+  const images = ["help", "referral", "crisis"] as const;
   return (
     <>
       <PageHeading

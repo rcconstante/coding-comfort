@@ -31,6 +31,7 @@ export function ResultsNavLink({
     <Link
       className="nav-link"
       href={href}
+      prefetch={true}
       aria-current={active ? "page" : undefined}
     >
       {children}

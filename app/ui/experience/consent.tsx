@@ -7,12 +7,10 @@ import { Asset, Info, PageHeading } from "./shared";
 import { clearSession, updateSession } from "../../lib/use-session";
 import { ui } from "../../lib/experience-copy";
 import type { Locale } from "../../lib/copy";
-import { researchCopy } from "../../lib/research-copy";
 
 export function Consent({ locale }: { locale: Locale }) {
   const t = ui[locale];
   const [agreed, setAgreed] = useState(false);
-  const [researchAgreed, setResearchAgreed] = useState(false);
   const checkboxId = useId();
   const router = useRouter();
   return (
@@ -34,20 +32,6 @@ export function Consent({ locale }: { locale: Locale }) {
         <Asset name="note" size={190} className="consent-illustration" />
       </div>
       <Info>{t.privacy}</Info>
-      <div className="research-consent">
-        <label className="consent-agree">
-          <input
-            type="checkbox"
-            checked={researchAgreed}
-            onChange={(event) => setResearchAgreed(event.target.checked)}
-          />
-          {researchCopy[locale].researchOptIn}
-        </label>
-        <details className="privacy-details">
-          <summary>{researchCopy[locale].researchPrivacyTitle}</summary>
-          <p>{researchCopy[locale].researchDetails}</p>
-        </details>
-      </div>
       <label className="consent-agree" htmlFor={checkboxId}>
         <input
           id={checkboxId}
@@ -75,7 +59,7 @@ export function Consent({ locale }: { locale: Locale }) {
             updateSession({
               consent: true,
               phase: "intro",
-              researchConsent: researchAgreed,
+              researchConsent: false,
             })
           }
         >

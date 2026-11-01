@@ -6,6 +6,7 @@ English/Filipino DASS-21 screening, supportive explanations, self-care, and a pr
 
 ![Landing page](docs/screenshots/landing.jpg)
 ![Results reflection](docs/screenshots/reflection.jpg)
+![Mobile navigation](docs/screenshots/mobile-menu.jpg)
 
 ## Run locally
 
@@ -51,7 +52,15 @@ For a new installation, generate a random 32-byte gate secret privately and set 
 - `/evaluation`: optional website feedback, separate consent, local draft, duplicate-safe submission.
 - `/admin/login`: unlisted authentication entry. Researchers can inspect data/export Excel; administrators can manage accounts and publish approved question versions.
 
-All 19 supplied illustrations are referenced. English/Filipino switching preserves participant answers and drafts. Results stay locked until all 21 questions are answered.
+All 19 supplied illustrations are preserved as WebP (8.2 MB → 1.2 MB). A small PNG is retained only for Apple touch-icon compatibility. English/Filipino switching preserves participant answers and drafts. Results stay locked until all 21 questions are answered.
+
+## Responsive UI and caching
+
+- Mobile and tablet headers use a keyboard-accessible menu below 1200 CSS pixels; desktop retains the floating navigation. The menu closes on navigation, outside click, focus leaving, Escape, and resizing to desktop.
+- Public pages no longer wait for researcher authentication. Refreshes have no branded loading screen, and stored sessions hydrate before showing consent or empty results.
+- Static WebP imports produce content-hashed URLs with immutable caching and responsive image sizes. Updated assets receive a new URL automatically; original PNG duplicates were removed.
+- Public page templates cache for an hour by validated language, section, and activity. Navigation prefetches these templates. Participant state stays in browser storage; no participant answers, journal, reflection, authenticated research data, or exports enter shared template caches.
+- Research sharing appears only as an optional step after results. Full disclosure is available through the styled `/privacy` page before saving.
 
 ## AI boundaries and reload recovery
 

@@ -22,13 +22,14 @@ import { api } from "../../../convex/_generated/api";
 import { researchCopy } from "../../lib/research-copy";
 
 export function Screening({ locale }: { locale: Locale }) {
-  const { session, storageError } = useSession();
+  const { session, storageError, ready } = useSession();
   const t = ui[locale];
   const currentInstrument = useQuery(api.instruments.current);
   const router = useRouter();
   const group = useId();
   const legend = useRef<HTMLLegendElement>(null);
   const [error, setError] = useState(false);
+  if (!ready) return null;
   if (!session.consent) return <Consent locale={locale} />;
   if (session.phase !== "questions")
     return (

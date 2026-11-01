@@ -15,7 +15,7 @@ const images = {
   depression: "depression",
   anxiety: "anxeity",
   stress: "stress",
-};
+} as const;
 function EmptyResults({ locale }: { locale: Locale }) {
   const t = ui[locale];
   return (
@@ -72,10 +72,11 @@ function ScoreDetails({ results, t }: { results: Results; t: ExperienceText }) {
   );
 }
 export function ResultsPage({ locale }: { locale: Locale }) {
-  const { session } = useSession();
+  const { session, ready } = useSession();
   const results = sessionResults(session);
   const t = ui[locale];
   const [details, setDetails] = useState(false);
+  if (!ready) return null;
   if (!results) return <EmptyResults locale={locale} />;
   return (
     <>
@@ -162,7 +163,7 @@ function recommendation(severity: Severity, t: ExperienceText) {
   }[severity];
 }
 export function Reflection({ locale }: { locale: Locale }) {
-  const { session } = useSession();
+  const { session, ready } = useSession();
   const results = sessionResults(session);
   const t = ui[locale];
   const [tab, setTab] = useState(0);
@@ -173,6 +174,7 @@ export function Reflection({ locale }: { locale: Locale }) {
     session.reflection.status === "ready"
       ? session.reflection.content?.[locale]
       : null;
+  if (!ready) return null;
   if (!results) return <EmptyResults locale={locale} />;
   return (
     <>
