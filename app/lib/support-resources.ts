@@ -7,16 +7,14 @@ export const supportResources = [
     phone: "1800-1888-1553",
     call: "tel:+63180018881553?oai_link_source=model_response_hotline",
     hours: "24/7",
-    checked: "2026-11-01",
   },
   {
     id: "hopeline",
     name: "Hopeline Philippines",
-    website: "https://ngf-mindstrong.com/",
+    website: "https://www.facebook.com/HopelinePH/",
     phone: null,
     call: null,
     hours: null,
-    checked: null,
   },
   {
     id: "intouch",
@@ -25,6 +23,5 @@ export const supportResources = [
     phone: null,
     call: null,
     hours: null,
-    checked: null,
   },
 ] as const;

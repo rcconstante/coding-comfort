@@ -197,6 +197,7 @@ export function finishReflection(
     updateSession({
       reflection: {
         submissionKey,
+        policyVersion: "reviewed-v1",
         status: content ? "ready" : "error",
         content,
       },

@@ -1,0 +1,30 @@
+# Pilot readiness
+
+## Software changes
+
+- Replaced the legacy Hopeline destination with the user's supplied Facebook page. No new phone numbers were inferred from Facebook; automated access to that page is restricted.
+- Removed the visible contact-check date.
+- Replaced model-authored prose with a strict finite-selection contract and application-owned bilingual wording. The two diagnostic examples from the audit cannot enter new model responses; legacy cache parsing also rejects both phrases.
+- Scheduled, duplicate-safe generation and browser-private encrypted recovery fix full reloads during generation. Encrypted delivery expires after 24 hours, while one-way request markers prevent later duplicate generation.
+- Added a private server gate, network/global/participant rate limits, bounded request bodies, security headers, same-origin checks, generic error pages, and production dependency cleanup.
+- Current deployment instructions and screenshots are in README. Historical audit findings describe the previous revision and are not current unresolved software findings.
+
+## Required study-owner sign-off before real participant recruitment
+
+- [ ] Research/nursing team approves supplied Filipino questionnaire wording, especially items 4, 6, and 14. Preserve the original until approved changes are versioned.
+- [ ] Study owner approves the screening, optional AI, research, and feedback consent wording and intended participant population.
+- [ ] Study owner records retention duration, data-removal procedure, authorized researcher list, and handling of participant requests.
+- [ ] Team reviews all application-owned supportive wording and confirms it is appropriate for the pilot. Technical safety boundaries are not a substitute for clinical/content review.
+- [ ] Team checks actual support-channel availability and the supplied Hopeline page before recruitment. No test calls or messages were sent automatically.
+- [ ] Deploy to HTTPS, set the three Vercel variables from README, replace temporary administrator passwords, and run an authenticated export test on the intended host.
+- [ ] Use development deployment/synthetic data for rehearsals; do not populate production with fictitious participants.
+
+These are real approval tasks. They cannot be completed by generating a checked checkbox or claiming that a software test provides approval.
+
+## Dependency review
+
+Production dependencies are checked with `npm audit --omit=dev`. The old ExcelJS/archiver/glob/uuid chain was removed in favor of a typed writer. The remaining moderate advisories reported by the full development audit concern minimatch within the ESLint/TypeScript lint toolchain; they are not shipped as production dependencies. npm's suggested forced downgrade would break the pinned Next.js lint setup, so it was not applied. Recheck upstream fixes regularly.
+
+## Operating limits
+
+Public endpoints remain anonymous; no system can promise that one browser token equals one person. Global model caps bound spend, server/network gates reduce abuse, and hashed-token limits protect research writes. A determined distributed denial-of-service attack still requires host-level mitigation. Native Vercel forwarding is assumed; do not put an unreviewed external reverse proxy in front of the application. Keep deployment-owner credentials separate from frontend runtime variables.

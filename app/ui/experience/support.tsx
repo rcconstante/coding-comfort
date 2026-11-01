@@ -131,9 +131,6 @@ export function Support({
                         {resource.phone}
                       </a>
                       <span className="resource-hours">{resource.hours}</span>
-                      <small>
-                        {t.verified}: {resource.checked}
-                      </small>
                     </>
                   ) : (
                     <p className="resource-note">{t.unverified}</p>

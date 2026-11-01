@@ -13,14 +13,17 @@ export type SavedReflection = {
   submissionKey: string;
   status: "pending" | "ready" | "error";
   content: ReflectionContent | null;
+  publicKey?: string;
+  privateKey?: string;
+  policyVersion?: "reviewed-v1";
 };
 const unsafeClaims = [
-  /\byou (?:have|suffer from|are diagnosed with) (?:clinical |major |an? )?(?:depression|anxiety disorder|mental (?:illness|disorder))/i,
+  /\byou (?:have|suffer from|are suffering from|are diagnosed with) (?:clinical |major |an? )?(?:depression|anxiety disorder|mental (?:illness|disorder))/i,
   /\byou (?:are|seem|appear|sound)(?: to be)? (?:doing well|mentally healthy|safe|fine|feeling balanced)/i,
   /\byou(?:'re| are| have been) (?:feeling )?(?:generally )?(?:calm and relaxed|balanced|mentally healthy)/i,
   /\b(?:start|stop|increase|decrease|discontinue) (?:taking )?(?:your )?(?:prescribed )?(?:medication|treatment|antidepressants)/i,
   /\byou will (?:develop|recover from|overcome) (?:depression|anxiety|a mental)/i,
-  /\b(?:mayroon kang|may) (?:clinical depression|depresyon ka|anxiety disorder ka)/i,
+  /\b(?:mayroon kang|may) (?:clinical depression|depresyon|anxiety disorder)/i,
   /\b(?:itigil|tigilan|dagdagan|bawasan) (?:ang )?(?:iyong )?(?:gamot|medikasyon)/i,
   /\b(?:tiyak na|siguradong) (?:may depresyon ka|malusog ang iyong pag-iisip)/i,
 ];
@@ -93,9 +96,19 @@ export function parseSavedReflection(value: unknown): SavedReflection | null {
   return {
     submissionKey: row.submissionKey,
     status:
-      row.status === "ready" && !content
+      row.status === "ready" &&
+      (!content || row.policyVersion !== "reviewed-v1")
         ? "error"
         : (row.status as SavedReflection["status"]),
     content,
+    ...(row.policyVersion === "reviewed-v1"
+      ? { policyVersion: "reviewed-v1" as const }
+      : {}),
+    ...(typeof row.publicKey === "string" && row.publicKey.length <= 1500
+      ? { publicKey: row.publicKey }
+      : {}),
+    ...(typeof row.privateKey === "string" && row.privateKey.length <= 5000
+      ? { privateKey: row.privateKey }
+      : {}),
   };
 }

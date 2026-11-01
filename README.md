@@ -1,65 +1,87 @@
 # Coding Comfort
 
-A bilingual (English/Filipino) DASS-21 screening and self-care platform with an authenticated researcher dashboard, Convex storage, website evaluations, and Excel exports.
+English/Filipino DASS-21 screening, supportive explanations, self-care, and a protected researcher area. Participants do not need accounts. This is a research prototype, not a diagnosis or emergency service.
 
-## Local setup
+## Preview
+
+![Landing page](docs/screenshots/landing.jpg)
+![Results reflection](docs/screenshots/reflection.jpg)
+
+## Run locally
 
 ```sh
 npm ci
-```
-
-Copy `.env.example` to `.env.local` and configure the intended deployment. The example contains public deployment addresses only. Then run:
-
-```sh
 npm run dev
 ```
 
-For isolated development, select the existing project with `npx convex dev --configure existing --team richmond-constante --project coding-comfort --dev-deployment cloud`. This updates `.env.local` to your development deployment. Do not use production for test participant data.
+Copy `.env.example` to `.env.local` for a new checkout. On this configured workstation, preserve the existing ignored `.env.local`; it contains the server gate secret. Never commit it.
 
-## Public screens
+## Deploy the frontend to Vercel
 
-- `/`: landing page; Start opens the four-card `/dashboard`.
-- `/screening`: consent, introduction, version-pinned 21-question DASS-21, and separate subscale scoring.
-- `/results`: scores, severity categories, Excel-research submission status, and an optional feedback invitation.
-- `/reflection`: score summary, recommendations, and referral guidance.
-- `/self-care`: breathing, grounding, local journal, and small-step planner.
-- `/support` and `/contact`: support directory and the official team email.
-- `/evaluation`: optional website evaluation, with explicit feedback consent and a skip option.
+Import `rcconstante/coding-comfort`, choose **Next.js**, root directory `.`, install `npm ci`, build `npm run build`. Keep the default Next.js output setting. Configure these environment variables before building:
 
-Language changes preserve answers, the questionnaire version, and journal drafts. All 19 supplied illustrations are used.
+| Vercel variable               | Production value                                                                                                                                             |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `NEXT_PUBLIC_CONVEX_URL`      | `https://expert-mastiff-800.convex.cloud`                                                                                                                    |
+| `NEXT_PUBLIC_CONVEX_SITE_URL` | `https://expert-mastiff-800.convex.site`                                                                                                                     |
+| `REFLECTION_GATE_SECRET`      | The exact secret already configured in this workstation's ignored `.env.local` and the production backend. Server-only; never prefix it with `NEXT_PUBLIC_`. |
 
-## Researcher access
+Redeploy after changing environment variables. Vercel supplies `VERCEL` automatically; do not set it locally. Preview deployments should use the development backend and its matching gate secret, rather than production research data.
 
-The unlisted entry point is `/admin/login`. It is intentionally absent from public navigation. Knowledge of the URL does not grant access.
+These secrets belong **only in Convex environment settings**:
 
-- **Researchers:** view summary counts, paginated screening responses and feedback, and download date-filtered `.xlsx` exports.
-- **Administrators:** additionally create/manage researcher accounts and publish approved English/Filipino questionnaire wording as immutable versions.
-- Every research query/export checks authentication, active access, role, and the first-login password-change requirement on the backend.
-- Public sign-up is disabled. Passwords are hashed by Convex Auth. Temporary passwords must be replaced before research data is available. Disabling an account immediately blocks protected backend operations.
+| Backend setting           | Purpose                                             |
+| ------------------------- | --------------------------------------------------- |
+| `GEMINI_API_KEY`          | Model access, already configured                    |
+| `REFLECTION_GATE_SECRET`  | Must match the Vercel server secret                 |
+| `JWT_PRIVATE_KEY`, `JWKS` | Existing authentication signing keys; preserve them |
 
-See [research operations](docs/research-operations.md) for account provisioning, password recovery, deployment, and data-handling details.
+Backend code is deployed separately with `npm run convex:deploy`. Do not put a Convex deployment-owner key, signing key, or Gemini key into public variables. No Vercel database, participant authentication service, or public signup is required. Do not configure automatic backend deployment using a production owner key unless your CI explicitly needs it.
 
-## Consent and data
+For a new installation, generate a random 32-byte gate secret privately and set the same value in Vercel and Convex. Authentication setup and internal administrator provisioning are documented in [research operations](docs/research-operations.md). Initial passwords must be replaced before research data or exports become accessible.
 
-Screening answers, results, journals, small-step plans, feedback drafts, and AI reflections persist in browser `localStorage`. Existing tab sessions migrate automatically. No participant account is needed. Optional research consent allows the 21 screening responses, separately computed scores, questionnaire version, language, timestamp, and pseudonymous session code to be saved in Convex. Journals are never uploaded. Feedback has separate consent and does not attach journal text or screening answers.
+## Features
 
-End session clears local data, including feedback drafts and AI reflections. It does not delete already-consented research submissions. Participant counts represent consenting browser sessions, not verified unique people.
+- `/`: supplied branding, purple landing page; Start opens the four-card `/dashboard`.
+- `/screening`: consent, exact supplied 21-item Filipino instrument, English version, one-question flow, back/next, sun-arc progress, separate deterministic scoring.
+- `/results`: three independent scores, conventional symptom ranges, details, support/self-care links, optional research submission and feedback.
+- `/reflection`: supportive bilingual explanation, further explanation, one/two small steps, referral guidance, calming exercise, finish.
+- `/self-care`: breathing controls/duration, self-paced 5-4-3-2-1 grounding, local journal, small-step planner.
+- `/support`, `/contact`: resource directory, the supplied Hopeline Facebook page, professional-support guidance, emergency instructions, team mailto.
+- `/evaluation`: optional website feedback, separate consent, local draft, duplicate-safe submission.
+- `/admin/login`: unlisted authentication entry. Researchers can inspect data/export Excel; administrators can manage accounts and publish approved question versions.
 
-## Gemini reflection
+All 19 supplied illustrations are referenced. English/Filipino switching preserves participant answers and drafts. Results stay locked until all 21 questions are answered.
 
-With separate AI consent, the public reflection action sends only the three doubled scores to Gemini 3.1 Flash-Lite. The backend derives each severity independently. One structured response includes English and Filipino explanations, one or two self-care steps, referral guidance, and a further explanation. Follow-up controls reuse that response.
+## AI boundaries and reload recovery
 
-Configure `GEMINI_API_KEY` as a **Convex environment secret**, never a `NEXT_PUBLIC_` variable. The key is not stored in browser storage or source code. Atomic hashed-session claims prevent concurrent/replayed requests. There are no automatic model retries, including on failures. A new screening or explicitly ended session starts a new request allowance. The response is stored only in the browser; Convex stores the one-way session hash and request time, not the AI text or scores. Basic shared limits cap model requests at 20/minute and 500/day.
+The model receives only three calculated scores and selects an opening and one/two low-risk steps from a finite reviewed menu. Arbitrary model prose is **never displayed**. The application constructs each subscale explanation from its validated score and category and supplies the professional-support guidance. This prevents model-generated diagnoses, medication instructions, invented causes, score changes, and clinical decisions from becoming UI text. It is intentionally bounded assistance rather than a free-form chatbot.
 
-Keep the page open until generation finishes. Reloading during generation can lose the in-flight response; it deliberately does not start another model call. Saved reflections survive reloads and language switches. If local storage is unavailable, generation is disabled. Research-storage consent remains separate from AI consent.
+One atomic backend transaction claims a screening session and schedules exactly one model attempt. Concurrent submissions/reloads reuse the same job. The browser creates a private recovery key before requesting work; **only its public key is sent**. The result is encrypted with AES-GCM and an RSA-OAEP-wrapped key. Reloaded pages recover and decrypt that same result without a second generation. The encrypted result expires after 24 hours; an unrecoverable provider failure does not automatically generate again. A timeout closes abandoned pending jobs after 90 seconds. The response, private key, answers, and journal persist locally until End session or browser-data removal. Losing the local private key prevents recovery.
 
-See [PDF feature alignment](docs/pdf-feature-alignment.md) for the source-guide review and the explicitly requested Gemini substitution for Claude.
+## Security and privacy
 
-## Validation
+- Research data and Excel exports enforce authentication, active role, and completed initial password change on the backend. Public signup is disabled.
+- Authentication has a five-failed-attempt/hour limit, one-hour inactivity timeout, eight-hour session lifetime, and fifteen-minute access tokens.
+- Model work requires a server gate secret. The same-origin API bounds bodies to 4 KiB and never returns provider errors, secrets, stack traces, scores, or plaintext generated content.
+- Model limits: one attempt per screening, 20 starts/minute globally, 500/day globally, and 10/hour per HMAC-hashed network address. Shared campus networks share that limit. Local development uses a shared development bucket. Vercel's trusted forwarded address is used only on Vercel; a different host needs a reviewed proxy-IP configuration.
+- Research/feedback writes: 60/minute globally and six/minute per hashed participant token. Anonymous sessions are not verified unique people, and browser-token limits are not an identity guarantee.
+- Response headers block framing/object content, restrict network sources, disable unnecessary permissions, suppress framework branding, and set referrer/nosniff policies. CSP retains inline script/style support required by this Next.js rendering setup; it is not a nonce-based strict CSP.
+- User text is rendered as text, never injected as HTML. XLSX text cells escape formula-leading values. Private exports use `no-store` and bounded pagination/row counts.
+- Separate consent controls research, feedback, and AI processing. Journals are never uploaded. Consented research submissions remain remote after local clearing; the study team must apply its approved retention/removal procedure.
+- Browser local storage is accessible to scripts on the same origin and other users of the same browser profile. It is not a secure vault. Use HTTPS, a dedicated device/profile for sensitive testing, and End session on shared devices.
+
+The Excel writer was replaced to remove the previous production dependency advisories. Run `npm audit --omit=dev` for current production dependency status. Development-only lint-tool advisories are documented in [pilot readiness](docs/pilot-readiness.md); do not force a breaking lint downgrade to hide them.
+
+## Validation and pilot prerequisites
 
 ```sh
 npm test
+npm run lint
 npm run build
+npm audit --omit=dev
 ```
 
-Tests cover questionnaire scoring, every severity threshold, response validation, feedback validation, account/password rules, spreadsheet formula escaping, and immutable questionnaire snapshot shape.
+Tests cover all score boundaries/item assignments, invalid inputs, bounded model selections, output safety regressions, encryption/decryption and tampering, feedback/account validation, and spreadsheet escaping. Live integration checks cover queued recovery, replay prevention, server-gate rejection, private routes, and headers. Screenshots use synthetic data without research submission.
+
+See [pilot readiness](docs/pilot-readiness.md) for the release checklist. Software tests cannot supply translation sign-off, ethics/consent approval, retention policy approval, clinical validation, or guaranteed provider availability. The supplied wording in items 4/6/14 still needs the research team's review; no questionnaire text has been silently rewritten.

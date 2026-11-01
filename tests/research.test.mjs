@@ -6,7 +6,20 @@ import {
   validateNewPassword,
   validatePasswordChange,
   safeSpreadsheetText,
+  isCalendarDate,
 } from "../app/lib/research-validation.ts";
+test("export dates reject normalized impossible dates", () => {
+  for (const value of [
+    "2026-02-29",
+    "2026-02-31",
+    "2026-04-31",
+    "2026-13-01",
+    "not-a-date",
+  ])
+    assert.equal(isCalendarDate(value), false);
+  for (const value of ["2024-02-29", "2026-11-01"])
+    assert.equal(isCalendarDate(value), true);
+});
 import { parseInstrument } from "../app/lib/instrument.ts";
 
 test("evaluation requires three bounded integer ratings and plain-text feedback", () => {

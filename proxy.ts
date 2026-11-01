@@ -2,9 +2,19 @@ import {
   convexAuthNextjsMiddleware,
   nextjsMiddlewareRedirect,
 } from "@convex-dev/auth/nextjs/server";
+import { NextResponse } from "next/server";
 export default convexAuthNextjsMiddleware(
   async (request, { convexAuth }) => {
     const path = request.nextUrl.pathname;
+    if (
+      path.startsWith("/api/") &&
+      request.method === "POST" &&
+      request.headers.get("origin") !== request.nextUrl.origin
+    )
+      return NextResponse.json(
+        { error: "Request not allowed." },
+        { status: 403 },
+      );
     if (
       path.startsWith("/admin") &&
       path !== "/admin/login" &&

@@ -61,3 +61,11 @@ export function validatePasswordChange(
 export function safeSpreadsheetText(value: string) {
   return /^[\s]*[=+@-]/.test(value) ? `'${value}` : value;
 }
+export function isCalendarDate(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const stamp = Date.parse(`${value}T00:00:00Z`);
+  return (
+    Number.isFinite(stamp) &&
+    new Date(stamp).toISOString().slice(0, 10) === value
+  );
+}

@@ -1,5 +1,9 @@
 # PDF feature alignment
 
+**Remediation update:** the historical Hopeline, AI prose-filter, and interrupted-generation findings have been addressed. See [pilot readiness](pilot-readiness.md) and README for the current implementation and remaining study-owner approvals.
+
+**Audit update:** the [2026-11-01 feature audit](feature-audit-2026-11-01.md) found an incorrect external support destination and incomplete AI output filtering. The summary below describes implemented features; it is not a full compliance sign-off. Use the audit's findings and release decision as the current status.
+
 Reviewed `Coding-Comfort..pdf` (13 pages) on 2026-11-01, including extracted text and the relevant rendered source pages. The user's later instructions authorize a floating top navigation, the separate landing/Start/four-card flow, Convex research/admin/evaluation features, browser local storage, and Gemini in place of the PDF's Claude references.
 
 | Guide requirement                                                                                               | Implementation and verification                                                                                                                                                                                                                                                                 |

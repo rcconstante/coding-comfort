@@ -14,25 +14,27 @@ import { requireResearcher } from "./permissions";
 const locale = v.union(v.literal("en"), v.literal("fil"));
 const uuid =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-async function limitSubmission(ctx: MutationCtx) {
+async function limitSubmission(ctx: MutationCtx, token: string) {
+  if (!uuid.test(token)) throw new ConvexError("Invalid participant session.");
   const now = Date.now();
-  const record = await ctx.db
-    .query("requestWindows")
-    .withIndex("by_key", (q) => q.eq("key", "research-submit"))
-    .unique();
-  if (!record)
-    await ctx.db.insert("requestWindows", {
-      key: "research-submit",
-      startedAt: now,
-      count: 1,
-    });
-  else if (now - record.startedAt >= 60_000)
-    await ctx.db.patch(record._id, { startedAt: now, count: 1 });
-  else if (record.count >= 60)
-    throw new ConvexError(
-      "Submission limit reached. Please try again in a minute.",
-    );
-  else await ctx.db.patch(record._id, { count: record.count + 1 });
+  for (const [key, maximum] of [
+    ["research-submit", 60],
+    [`research-${bytesToHex(sha256(utf8ToBytes(token)))}`, 6],
+  ] as const) {
+    const row = await ctx.db
+      .query("requestWindows")
+      .withIndex("by_key", (q) => q.eq("key", key))
+      .unique();
+    if (!row)
+      await ctx.db.insert("requestWindows", { key, startedAt: now, count: 1 });
+    else if (now - row.startedAt >= 60000)
+      await ctx.db.patch(row._id, { startedAt: now, count: 1 });
+    else if (row.count >= maximum)
+      throw new ConvexError(
+        "Submission limit reached. Please try again in a minute.",
+      );
+    else await ctx.db.patch(row._id, { count: row.count + 1 });
+  }
 }
 async function stats(ctx: MutationCtx) {
   const existing = await ctx.db
@@ -99,7 +101,7 @@ export const submitScreening = mutation({
       throw new ConvexError(
         "The questionnaire version is not available. Please restart the screening.",
       );
-    await limitSubmission(ctx);
+    await limitSubmission(ctx, args.token);
     const participantId = await participant(
       ctx,
       args.token,
@@ -171,7 +173,7 @@ export const submitEvaluation = mutation({
       args.overall,
       args.comment,
     );
-    await limitSubmission(ctx);
+    await limitSubmission(ctx, args.token);
     const participantId = await participant(
       ctx,
       args.token,

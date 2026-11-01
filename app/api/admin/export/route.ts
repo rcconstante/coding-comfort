@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { fetchQuery } from "convex/nextjs";
-import ExcelJS from "exceljs";
+import writeXlsxFile, {
+  type Sheet,
+  type SheetData,
+} from "write-excel-file/node";
 import type { FunctionReturnType } from "convex/server";
 import { api } from "../../../../convex/_generated/api";
-import { safeSpreadsheetText } from "../../../lib/research-validation";
+import {
+  safeSpreadsheetText,
+  isCalendarDate,
+} from "../../../lib/research-validation";
 
 export const maxDuration = 60;
 export async function GET(request: NextRequest) {
@@ -31,7 +37,7 @@ export async function GET(request: NextRequest) {
     const toText = request.nextUrl.searchParams.get("to");
     if (
       [fromText, toText].some(
-        (value) => value !== null && !/^\d{4}-\d{2}-\d{2}$/.test(value),
+        (value) => value !== null && !isCalendarDate(value),
       )
     )
       return NextResponse.json({ error: "Invalid dates." }, { status: 400 });
@@ -48,12 +54,17 @@ export async function GET(request: NextRequest) {
         { error: "Invalid date range." },
         { status: 400 },
       );
-    const workbook = new ExcelJS.Workbook();
-    workbook.creator = "Coding Comfort";
-    workbook.created = new Date();
-    const sheet = workbook.addWorksheet(
-      kind === "screenings" ? "Screening results" : "Website evaluations",
-    );
+    type ExportSheet = {
+      name: string;
+      columns: { header: string; key: string; width: number }[];
+      rows: Record<string, string | number>[];
+    };
+    const sheet: ExportSheet = {
+      name: kind === "screenings" ? "Screening results" : "Website evaluations",
+      columns: [],
+      rows: [],
+    };
+    const worksheets: ExportSheet[] = [sheet];
     sheet.columns =
       kind === "screenings"
         ? [
@@ -103,7 +114,7 @@ export async function GET(request: NextRequest) {
           count++;
           if (count > 20000) throw new Error("EXPORT_LIMIT");
           versions.add(row.instrumentVersion);
-          sheet.addRow({
+          sheet.rows.push({
             participantCode: row.participantCode,
             submittedAt: new Date(row.submittedAt).toISOString(),
             locale: row.locale,
@@ -133,7 +144,7 @@ export async function GET(request: NextRequest) {
         for (const row of page.page) {
           count++;
           if (count > 20000) throw new Error("EXPORT_LIMIT");
-          sheet.addRow({
+          sheet.rows.push({
             participantCode: row.participantCode,
             submittedAt: new Date(row.submittedAt).toISOString(),
             locale: row.locale,
@@ -155,7 +166,12 @@ export async function GET(request: NextRequest) {
         { versions: [...versions] },
         { token },
       );
-      const dictionary = workbook.addWorksheet("Questionnaire versions");
+      const dictionary: ExportSheet = {
+        name: "Questionnaire versions",
+        columns: [],
+        rows: [],
+      };
+      worksheets.push(dictionary);
       dictionary.columns = [
         { header: "Version", key: "version", width: 28 },
         { header: "Item", key: "item", width: 12 },
@@ -165,7 +181,7 @@ export async function GET(request: NextRequest) {
       for (const instrument of instruments) {
         if (!instrument) continue;
         instrument.questions.en.forEach((text, index) =>
-          dictionary.addRow({
+          dictionary.rows.push({
             version: instrument.version,
             item: `Q${index + 1}`,
             en: safeSpreadsheetText(text),
@@ -173,7 +189,7 @@ export async function GET(request: NextRequest) {
           }),
         );
         instrument.options.en.forEach((text, index) =>
-          dictionary.addRow({
+          dictionary.rows.push({
             version: instrument.version,
             item: `Response ${index}`,
             en: safeSpreadsheetText(text),
@@ -182,8 +198,7 @@ export async function GET(request: NextRequest) {
         );
       }
     }
-    const notes = workbook.addWorksheet("Read me");
-    notes.addRows([
+    const notes: SheetData = [
       ["Coding Comfort research export"],
       ["Generated at (UTC)", new Date().toISOString()],
       ["Rows", count],
@@ -202,24 +217,34 @@ export async function GET(request: NextRequest) {
       [
         "Website feedback uses a 1–5 experience rating and is not a clinical assessment.",
       ],
-    ]);
-    notes.getColumn(1).width = 95;
-    notes.getColumn(2).width = 35;
-    for (const worksheet of workbook.worksheets) {
-      worksheet.views = [{ state: "frozen", ySplit: 1 }];
-      worksheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
-      worksheet.getRow(1).fill = {
-        type: "pattern",
-        pattern: "solid",
-        fgColor: { argb: "FF713C99" },
-      };
-      if (worksheet !== notes)
-        worksheet.autoFilter = {
-          from: { row: 1, column: 1 },
-          to: { row: 1, column: worksheet.columnCount },
-        };
-    }
-    const buffer = await workbook.xlsx.writeBuffer();
+    ];
+    const sheets: Sheet<Buffer>[] = worksheets.map((worksheet) => ({
+      sheet: worksheet.name,
+      columns: worksheet.columns.map((column) => ({ width: column.width })),
+      stickyRowsCount: 1,
+      data: [
+        worksheet.columns.map((column) => ({
+          value: column.header,
+          fontWeight: "bold",
+          backgroundColor: "#713C99",
+          color: "#FFFFFF",
+        })),
+        ...worksheet.rows.map((row) =>
+          worksheet.columns.map((column) => {
+            const value = row[column.key] ?? "";
+            return typeof value === "number"
+              ? { type: Number, value }
+              : { type: String, value: safeSpreadsheetText(value) };
+          }),
+        ),
+      ],
+    }));
+    sheets.push({
+      sheet: "Read me",
+      data: notes,
+      columns: [{ width: 95 }, { width: 35 }],
+    });
+    const buffer = await writeXlsxFile(sheets).toBuffer();
     return new NextResponse(new Uint8Array(buffer), {
       headers: {
         "Content-Type":

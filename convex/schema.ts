@@ -78,6 +78,21 @@ export default defineSchema({
   reflectionRequests: defineTable({
     sessionHash: v.string(),
     createdAt: v.number(),
+    status: v.optional(
+      v.union(
+        v.literal("pending"),
+        v.literal("ready"),
+        v.literal("error"),
+        v.literal("expired"),
+      ),
+    ),
+    envelope: v.optional(
+      v.object({
+        iv: v.string(),
+        wrappedKey: v.string(),
+        ciphertext: v.string(),
+      }),
+    ),
   }).index("by_session", ["sessionHash"]),
   instruments: defineTable({
     version: v.string(),

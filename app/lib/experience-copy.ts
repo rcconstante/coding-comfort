@@ -190,7 +190,6 @@ const en = {
     "If you or someone else is in immediate danger, contact local emergency services or go to the nearest emergency department. If you can, stay with someone you trust. Coding Comfort cannot monitor emergencies or automatically contact anyone.",
   call: "Call",
   website: "Official website",
-  verified: "Contact details checked",
   unverified:
     "Current hotline details are not verified. Please check the organization’s official website.",
   hours: "24/7",
@@ -403,7 +402,6 @@ const fil: typeof en = {
     "Kung ikaw o ibang tao ay nasa agarang panganib, kontakin ang lokal na serbisyong pang-emergency o pumunta sa pinakamalapit na emergency department. Kung maaari, manatili kasama ang pinagkakatiwalaan mo. Hindi nagmo-monitor ng emergency o awtomatikong kumokontak ang Coding Comfort.",
   call: "Tumawag",
   website: "Opisyal na website",
-  verified: "Sinuri ang detalye ng kontak",
   unverified:
     "Hindi pa nabeberipika ang kasalukuyang hotline. Tingnan ang opisyal na website ng organisasyon.",
   hours: "24/7",

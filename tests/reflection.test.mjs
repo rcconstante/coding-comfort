@@ -80,9 +80,14 @@ test("local reflection state keeps pending/error markers and refuses malformed c
       submissionKey,
       status,
       content: status === "ready" ? content : null,
+      policyVersion: "reviewed-v1",
     };
     assert.deepEqual(parseSavedReflection(saved), saved);
   }
+  assert.equal(
+    parseSavedReflection({ submissionKey, status: "ready", content }).status,
+    "error",
+  );
   assert.equal(
     parseSavedReflection({ submissionKey, status: "ready", content: null })
       .status,
