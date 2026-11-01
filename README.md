@@ -47,9 +47,10 @@ For a new installation, generate a random 32-byte gate secret privately and set 
 - `/screening`: consent, exact supplied 21-item Filipino instrument, English version, one-question flow, back/next, sun-arc progress, separate deterministic scoring.
 - `/results`: three independent scores, conventional symptom ranges, details, support/self-care links, optional research submission and feedback.
 - `/reflection`: supportive bilingual explanation, further explanation, one/two small steps, referral guidance, calming exercise, finish.
-- `/self-care`: breathing controls/duration, self-paced 5-4-3-2-1 grounding, local journal, small-step planner.
+- `/self-care`: breathing controls with an accessible custom duration dropdown, self-paced 5-4-3-2-1 grounding, local journal, small-step planner. Journaling and steps use a brief self-care introduction and do not require DASS-21 screening.
 - `/support`, `/contact`: resource directory, the supplied Hopeline Facebook page, professional-support guidance, emergency instructions, team mailto.
 - `/evaluation`: optional website feedback, separate consent, local draft, duplicate-safe submission.
+- `/privacy`: bilingual data-focused privacy policy, linked from the public footer and consent screens; explains browser storage, optional submissions, AI processing, retention, and removal requests.
 - `/admin/login`: unlisted authentication entry. Researchers can inspect data/export Excel; administrators can manage accounts and publish approved question versions.
 
 All 19 supplied illustrations are preserved as WebP (8.2 MB → 1.2 MB). A small PNG is retained only for Apple touch-icon compatibility. English/Filipino switching preserves participant answers and drafts. Results stay locked until all 21 questions are answered.

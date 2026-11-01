@@ -11,6 +11,7 @@ import { useSession, updateSession } from "../../lib/use-session";
 import { ui } from "../../lib/experience-copy";
 import type { Locale } from "../../lib/copy";
 import { activities, type Activity } from "../../lib/activities";
+import { DurationSelect } from "../duration-select";
 
 const activityImages = ["breath", "grounding-act", "guide-journaling", "heart"] as const;
 
@@ -49,25 +50,22 @@ function Breathing({ locale }: { locale: Locale }) {
   return (
     <div className="surface breathing-surface">
       <p>{t.breathingInstructions}</p>
-      <label className="duration-label">
+      <div className="duration-label">
         {t.duration}
-        <select
+        <DurationSelect
           value={duration}
           disabled={running}
-          onChange={(event) => {
-            setDuration(Number(event.target.value));
+          label={t.duration}
+          minute={t.minute}
+          minutes={t.minutes}
+          onChange={(seconds) => {
+            setDuration(seconds);
             setElapsed(0);
             setStarted(false);
             setCycle(cycle + 1);
           }}
-        >
-          {[60, 120, 180, 300].map((seconds) => (
-            <option key={seconds} value={seconds}>
-              {seconds / 60} {seconds === 60 ? t.minute : t.minutes}
-            </option>
-          ))}
-        </select>
-      </label>
+        />
+      </div>
       <div className={`breathing-orbit ${running ? "is-running" : ""}`}>
         <div key={cycle} className="breathing-circle">
           <span aria-live="polite">
@@ -282,7 +280,7 @@ export function SelfCare({
   const { session, ready } = useSession();
   if ((activity === "journal" || activity === "steps") && !ready) return null;
   if ((activity === "journal" || activity === "steps") && !session.consent)
-    return <Consent locale={locale} />;
+    return <Consent locale={locale} purpose="self-care" />;
   if (!activity)
     return (
       <>
