@@ -1,6 +1,12 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import {
+  createContext,
+  createElement,
+  useContext,
+  useMemo,
+  useSyncExternalStore,
+} from "react";
 import { calculateResults, isAnswer, type Answer, type Results } from "./dass";
 import { parseInstrument, type Instrument } from "./instrument";
 import { parseSavedReflection, type SavedReflection } from "./reflection";
@@ -158,9 +164,22 @@ export function clearSession() {
   }
   listeners.forEach((listener) => listener());
 }
-export function useSession() {
+type SessionState = { session: Session; storageError: boolean; ready: boolean };
+const SessionContext = createContext<SessionState | null>(null);
+
+export function SessionProvider({ children }: { children: React.ReactNode }) {
   const stored = useSyncExternalStore(subscribe, getSnapshot, () => null);
-  return { session: stored ?? empty, storageError, ready: stored !== null };
+  const value = useMemo(
+    () => ({ session: stored ?? empty, storageError, ready: stored !== null }),
+    [stored],
+  );
+  return createElement(SessionContext.Provider, { value }, children);
+}
+
+export function useSession() {
+  const session = useContext(SessionContext);
+  if (!session) throw new Error("SessionProvider is required.");
+  return session;
 }
 export function sessionResults(session: Session): Results | null {
   if (!session.consent || session.phase !== "completed") return null;

@@ -55,7 +55,8 @@
 }
 body {
   margin: 0;
-  background: var(--background);
+  background: linear-gradient(135deg, #f5f1f8 0%, #f1ebf7 60%, #f7f2fb 100%);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   font-size: 16px;
@@ -75,7 +76,6 @@ a:focus-visible {
 }
 .site {
   min-height: 100dvh;
-  background: linear-gradient(135deg, #f5f1f8 0%, #f1ebf7 60%, #f7f2fb 100%);
 }
 .page-width {
   width: 100%;

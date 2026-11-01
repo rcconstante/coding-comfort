@@ -12,3 +12,11 @@ Checked on 2026-11-01 against a production build served locally.
 - Unit tests (17), lint, TypeScript/production build, and frontend credential-bundle checks passed.
 
 These are representative browser checks, not a claim to have tested every physical device or every browser version. Research approval items remain in the pilot checklist.
+
+## Navigation flash correction
+
+Public routes now share the `(public)` layout. The header remains mounted between landing, dashboard, and feature pages, and page content no longer has an empty page-level Suspense fallback. Server template caching and prefetching remain in place. The background is anchored to the viewport rather than each page's content height.
+
+Production-preview browser checks covered landing → dashboard, dashboard → contact, contact → self-care, self-care → breathing, and language changes. Repeated read-only DOM samples during transitions retained one visible header and populated main content; the old screen remained present until the destination was ready. Mobile menu links, desktop navigation, and preserved activity query parameters were checked. No participant records or AI requests were created.
+
+A subsequent review also moved session hydration into one root provider, so new feature components consume the already-hydrated session instead of returning an empty initial snapshot on each mount. Breathing/grounding no longer wait for unrelated saved-session state. This follow-up passed lint, production build, and 18 tests, including server-markup privacy isolation. Live browser access was disabled in Work settings before this final provider follow-up, so its final runtime checks were limited to HTTP routes and compiled output rather than another browser frame capture.

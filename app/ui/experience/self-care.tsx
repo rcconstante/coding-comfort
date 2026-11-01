@@ -280,7 +280,7 @@ export function SelfCare({
 }) {
   const t = ui[locale];
   const { session, ready } = useSession();
-  if (activity && !ready) return null;
+  if ((activity === "journal" || activity === "steps") && !ready) return null;
   if ((activity === "journal" || activity === "steps") && !session.consent)
     return <Consent locale={locale} />;
   if (!activity)
@@ -297,6 +297,7 @@ export function SelfCare({
               key={key}
               className="surface activity-card"
               href={`/self-care?activity=${key}&lang=${locale}`}
+              prefetch={true}
             >
               <Asset name={activityImages[index]} size={54} />
               <div>

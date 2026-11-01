@@ -39,6 +39,7 @@ export function Support({
                 key={key}
                 className="surface activity-card"
                 href={`/support?view=${key}&lang=${locale}`}
+                prefetch={true}
               >
                 <Asset name={images[index]} size={54} />
                 <div>

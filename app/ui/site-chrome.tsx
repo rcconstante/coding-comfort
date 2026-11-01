@@ -60,10 +60,10 @@ export function SiteHeader({
 
   return (
     <>
-      <a className="skip-link" href="#main-content">
+      <a className="skip-link" href="#main-content" lang={locale}>
         {t.skip}
       </a>
-      <header className="site-header">
+      <header className="site-header" lang={locale}>
         <div className="header-inner page-width">
           <Link
             className="brand"
