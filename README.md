@@ -1,6 +1,6 @@
 # Coding Comfort
 
-English/Filipino DASS-21 screening, supportive explanations, self-care, and a protected researcher area. Participants do not need accounts. This is a research prototype, not a diagnosis or emergency service.
+English/Filipino DASS-21 screening, supportive explanations, self-care, and a protected researcher area. Participants do not need accounts. This is an academic research project for use in the Philippines, not a diagnosis or emergency service. The production database is currently hosted in US East (Virginia); hosting location is separate from the study audience.
 
 ## Preview
 

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useSession, updateSession } from "../../lib/use-session";
@@ -80,6 +81,7 @@ export function Evaluation({ locale }: { locale: Locale }) {
       <form className="surface evaluation-form" onSubmit={send}>
         <div className="research-consent">
           <p>{t.evaluationDetails}</p>
+          <Link className="privacy-link" href={`/privacy?lang=${locale}`}>{t.researchPrivacyTitle}</Link>
           <label className="consent-agree">
             <input
               type="checkbox"

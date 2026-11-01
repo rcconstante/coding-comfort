@@ -3,7 +3,7 @@ const en = {
   researchOptIn:
     "I agree to share my 21 answers and scores for research, using a participant code instead of my name.",
   researchDetails:
-    "The research team receives your 21 answers, three scores, questionnaire version, language, date, and a participant code instead of your name. Records are stored in the United States until the team removes them. Your journal is never shared. Ending this session does not delete submitted records; contact the team with your participant code about removal.",
+    "If you agree to share your screening, the study team receives your 21 answers, three scores, question version, language, date, and participant code. The app does not ask for your name. Your journal is not included. Clearing this browser does not remove records already sent to the team.",
   researchPrivacyTitle: "Privacy details",
   privacyTitle: "Research privacy",
   privacyChoiceTitle: "Your choice",
@@ -19,7 +19,7 @@ const en = {
   saving: "Saving your consented screening…",
   saved: "Saved for research",
   saveError:
-    "Your results are safe in this browser, but could not be saved for research. Please try again.",
+    "Your results are still in this browser, but were not saved for research. Please try again.",
   retry: "Try again",
   participantCode: "Participant code",
   saveConsent: "Agree and save my screening for research",
@@ -30,7 +30,7 @@ const en = {
   evaluationConsent:
     "I agree to share my ratings and optional comment with the research team.",
   evaluationDetails:
-    "Your ratings, comment, language, date, and participant code are saved for research in the United States until the team removes them. Do not include names or contact details. Your journal and screening answers are not included.",
+    "If you submit feedback, the study team receives your ratings, optional comment, language, date, and participant code. Do not include names or contact details. The feedback submission does not include your journal or screening answers.",
   comment: "Anything you would like us to improve? (optional)",
   submit: "Submit Feedback",
   submitting: "Submitting…",
@@ -50,7 +50,7 @@ const fil: typeof en = {
   researchOptIn:
     "Pumapayag akong ibahagi ang 21 sagot at score ko para sa pananaliksik, gamit ang participant code sa halip na pangalan.",
   researchDetails:
-    "Matatanggap ng research team ang 21 sagot, tatlong score, bersyon ng questionnaire, wika, petsa, at participant code sa halip na pangalan. Nakaimbak ito sa United States hanggang alisin ng team. Hindi ibinabahagi ang journal. Hindi nabubura ang naipadalang tala kapag tinapos ang session; kontakin ang team gamit ang participant code tungkol sa pagbura nito.",
+    "Kung papayag kang ibahagi ang screening, matatanggap ng study team ang 21 sagot, tatlong score, bersyon ng mga tanong, wika, petsa, at participant code. Hindi hinihingi ng app ang pangalan mo. Hindi kasama ang journal. Hindi nabubura ang naipadalang tala kapag binura ang datos sa browser.",
   researchPrivacyTitle: "Detalye sa privacy",
   privacyTitle: "Privacy sa pananaliksik",
   privacyChoiceTitle: "Ikaw ang magpapasya",
@@ -77,7 +77,7 @@ const fil: typeof en = {
   evaluationConsent:
     "Pumapayag akong ibahagi sa research team ang mga rating at opsyonal na komento ko.",
   evaluationDetails:
-    "Naka-save para sa research sa United States ang mga rating, komento, wika, petsa, at participant code hanggang alisin ng team. Huwag magsama ng pangalan o contact details. Hindi kasama ang journal o mga sagot sa screening.",
+    "Kung magpapadala ka ng feedback, matatanggap ng study team ang mga rating, opsyonal na komento, wika, petsa, at participant code. Huwag magsama ng pangalan o contact details. Hindi kasama sa feedback ang journal o mga sagot sa screening.",
   comment: "Ano ang maaari pa naming pagbutihin? (opsyonal)",
   submit: "Ipadala ang Feedback",
   submitting: "Ipinapadala…",

@@ -5,7 +5,7 @@ const en = {
   consentItems: [
     "Participation is voluntary.",
     "You may stop at any time.",
-    "Coding Comfort is a research prototype.",
+    "Coding Comfort is an academic research project for use in the Philippines.",
     "The DASS-21 is a screening instrument, not a diagnostic tool.",
     "AI may explain your screening scores if you give separate permission.",
     "Please avoid including your name, address, phone number, or other unnecessary identifying information in free-text entries.",
@@ -217,7 +217,7 @@ const fil: typeof en = {
   consentItems: [
     "Kusang-loob ang paglahok.",
     "Maaari kang huminto anumang oras.",
-    "Ang Coding Comfort ay isang prototype para sa pananaliksik.",
+    "Ang Coding Comfort ay isang proyektong pang-akademikong pananaliksik para sa paggamit sa Pilipinas.",
     "Ang DASS-21 ay kasangkapan sa screening, hindi sa diagnosis.",
     "Maaaring ipaliwanag ng AI ang mga score mo kung may hiwalay kang pahintulot.",
     "Iwasang isama ang iyong pangalan, tirahan, numero ng telepono, o iba pang hindi kailangang impormasyong makakakilala sa iyo.",

@@ -32,7 +32,7 @@ Participant submissions require the explicit current consent version and are ide
 
 ## Consent, retention, and study review
 
-The interface discloses Convex's selected region (US East, N. Virginia), submitted fields, researcher/Excel use, and retention until removal by the research team. Local-session clearing does not remove research submissions. The team must establish its approved retention/removal procedures before recruiting participants. No complete-anonymity or emergency-monitoring promise is made.
+The bilingual privacy policy distinguishes the Philippine academic study from its database server in Virginia, United States. It lists submitted fields, staff access/Excel use, and states that submitted records have no automatic deletion period. The team must provide its approved retention period; the software does not invent one. Local-session clearing does not remove research submissions. The team must establish its approved retention/removal procedures before recruiting participants. No complete-anonymity or emergency-monitoring promise is made.
 
 Journal text remains local. Only three scores reach the model after consent. Finite model selections produce application-owned explanations. Scheduled work executes once and stores a browser-encrypted recovery envelope for up to 24 hours. The private key never leaves the browser. Server-gate, global and network limits protect model starts. See README for the current deployment and security configuration.
 
