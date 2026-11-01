@@ -8,8 +8,6 @@ import { SelfCare } from "../../ui/experience/self-care";
 import { activities, type Activity } from "../../lib/activities";
 import { Contact, Support, type SupportView } from "../../ui/experience/support";
 import { ResearchPrivacy } from "../../ui/experience/research-privacy";
-import { cacheLife } from "next/cache";
-import type { Locale } from "../../lib/copy";
 
 type SectionProps = {
   params: Promise<{ section: string }>;
@@ -39,28 +37,6 @@ export default async function SectionPage({ params, searchParams }: SectionProps
     ["resources", "referral", "crisis"].includes(query.view)
       ? (query.view as SupportView)
       : undefined;
-  return (
-    <SectionView
-      section={section}
-      locale={locale}
-      activity={activity}
-      view={view}
-    />
-  );
-}
-async function SectionView({
-  section,
-  locale,
-  activity,
-  view,
-}: {
-  section: string;
-  locale: Locale;
-  activity?: Activity;
-  view?: SupportView;
-}) {
-  "use cache";
-  cacheLife("hours");
   return (
     <main
       lang={locale}

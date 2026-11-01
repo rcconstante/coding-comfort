@@ -1,13 +1,12 @@
-import { Suspense } from "react";
+import { connection } from "next/server";
 import { PublicHeader } from "../ui/public-header";
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default async function PublicLayout({ children }: { children: React.ReactNode }) {
+  await connection();
   return (
     <div className="site">
-      <Suspense fallback={null}>
-        <PublicHeader />
-        {children}
-      </Suspense>
+      <PublicHeader />
+      {children}
     </div>
   );
 }

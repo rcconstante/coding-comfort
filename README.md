@@ -59,7 +59,8 @@ All 19 supplied illustrations are preserved as WebP (8.2 MB → 1.2 MB). A small
 - Mobile and tablet headers use a keyboard-accessible menu below 1200 CSS pixels; desktop retains the floating navigation. The menu closes on navigation, outside click, focus leaving, Escape, and resizing to desktop.
 - Public pages share a persistent header and background. Page-level empty loading boundaries were removed so navigation keeps the current screen visible until the next page is ready. Public pages do not wait for researcher authentication, and one root session provider hydrates saved progress once and shares it across navigation.
 - Static WebP imports produce content-hashed URLs with immutable caching and responsive image sizes. Updated assets receive a new URL automatically; original PNG duplicates were removed.
-- Public page templates cache for an hour by validated language, section, and activity. Navigation prefetches these templates. Participant state stays in browser storage; no participant answers, journal, reflection, authenticated research data, or exports enter shared template caches.
+- With the production server running, `npm run test:navigation` checks public responses for complete markup without empty streaming shells. Set `NAVIGATION_TEST_URL` to check another preview.
+- Public pages use complete request rendering with a persistent layout, rather than partially prefetched empty shells. Links prefetch complete destination routes. Hashed images and framework assets retain immutable caching; participant state stays in browser storage, while research data and exports remain private and uncached.
 - Research sharing appears only as an optional step after results. Full disclosure is available through the styled `/privacy` page before saving.
 
 ## AI boundaries and reload recovery

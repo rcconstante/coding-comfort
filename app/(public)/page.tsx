@@ -4,17 +4,9 @@ import { InformationCircleIcon } from "@hugeicons/core-free-icons";
 import { Card, CardContent } from "../ui/card";
 import { copy, getLocale, type PageQuery } from "../lib/copy";
 import character from "../../public/home.webp";
-import { cacheLife } from "next/cache";
-import type { Locale } from "../lib/copy";
 
 export default async function Home({ searchParams }: { searchParams: PageQuery }) {
   const locale = getLocale(await searchParams);
-  return <Landing locale={locale} />;
-}
-
-async function Landing({ locale }: { locale: Locale }) {
-  "use cache";
-  cacheLife("hours");
   const t = copy[locale];
 
   return (

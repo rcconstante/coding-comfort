@@ -10,7 +10,8 @@
     "test": "tsx --test tests/*.test.mjs",
     "convex:deploy": "convex deploy",
     "admin:configure-auth": "node scripts/configure-auth.mjs",
-    "admin:provision": "node scripts/provision-researcher.mjs"
+    "admin:provision": "node scripts/provision-researcher.mjs",
+    "test:navigation": "node scripts/check-navigation.mjs"
   },
   "dependencies": {
     "@auth/core": "^0.41.3",
