@@ -8,7 +8,7 @@ import type { Locale } from "../../lib/copy";
 import { Asset, ActionLink, Info, PageHeading } from "./shared";
 import { Button } from "../button";
 import { ResearchSubmission } from "./research-submission";
-import { researchCopy } from "../../lib/research-copy";
+import { ExperienceInvite } from "./experience-invite";
 import { GeminiReflection } from "./gemini-reflection";
 
 const images = {
@@ -114,11 +114,7 @@ export function ResultsPage({ locale }: { locale: Locale }) {
         ))}
       </div>
       <Info>{t.resultsDisclaimer}</Info>
-      <div className="evaluation-invite">
-        <ActionLink href="/evaluation" locale={locale}>
-          {researchCopy[locale].evaluate}
-        </ActionLink>
-      </div>
+      <ExperienceInvite locale={locale} />
       <div className="form-actions results-actions">
         <ActionLink href="/reflection" locale={locale}>
           {t.understand}

@@ -21,7 +21,11 @@ const en = {
   retry: "Try again",
   participantCode: "Participant code",
   saveConsent: "Agree and save my screening for research",
-  evaluate: "Share Feedback",
+  evaluate: "How was your experience?",
+  externalTitle: "Study survey on Google Forms",
+  externalAction: "Open Google Forms survey (new tab)",
+  externalNote:
+    "Optional. This opens a separate survey managed by the study team. Read its consent and privacy information before answering. Responses go to Google Forms and are not saved in this app. Your app answers are not attached to the link.",
   evaluationTitle: "How was your experience?",
   evaluationIntro:
     "Help the research team understand how the site works for you. This optional form is about the website, not a mental health assessment.",
@@ -30,7 +34,7 @@ const en = {
   evaluationDetails:
     "If you submit feedback, the study team receives your ratings, optional comment, language, date, and participant code. Do not include names or contact details. The feedback submission does not include your journal or screening answers.",
   comment: "Anything you would like us to improve? (optional)",
-  submit: "Submit Feedback",
+  submit: "Send my answers",
   submitting: "Submitting…",
   skip: "Skip for now",
   thanks: "Thank you for sharing your feedback",
@@ -66,7 +70,11 @@ const fil: typeof en = {
   retry: "Subukang muli",
   participantCode: "Participant code",
   saveConsent: "Pumayag at i-save ang screening para sa pananaliksik",
-  evaluate: "Magbigay ng Feedback",
+  evaluate: "Kumusta ang iyong karanasan?",
+  externalTitle: "Survey ng pag-aaral sa Google Forms",
+  externalAction: "Buksan ang Google Forms survey (bagong tab)",
+  externalNote:
+    "Opsyonal ito. Magbubukas ng hiwalay na survey na pinamamahalaan ng study team. Basahin muna ang pahintulot at impormasyon sa privacy nito. Sa Google Forms mapupunta ang mga sagot, hindi sa app na ito. Hindi kasama sa link ang mga sagot mo sa app.",
   evaluationTitle: "Kumusta ang iyong karanasan?",
   evaluationIntro:
     "Tulungan ang research team na maunawaan ang karanasan mo sa site. Opsyonal ang form na ito at tungkol ito sa website, hindi pagsusuri sa kalusugang pangkaisipan.",
@@ -75,7 +83,7 @@ const fil: typeof en = {
   evaluationDetails:
     "Kung magpapadala ka ng feedback, matatanggap ng study team ang mga rating, opsyonal na komento, wika, petsa, at participant code. Huwag magsama ng pangalan o contact details. Hindi kasama sa feedback ang journal o mga sagot sa screening.",
   comment: "Ano ang maaari pa naming pagbutihin? (opsyonal)",
-  submit: "Ipadala ang Feedback",
+  submit: "Ipadala ang mga sagot",
   submitting: "Ipinapadala…",
   skip: "Laktawan muna",
   thanks: "Salamat sa iyong feedback",

@@ -2648,3 +2648,18 @@ html {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+
+.external-survey {
+  padding: 24px;
+  margin-bottom: 24px;
+  color: #705784;
+}
+.external-survey h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary);
+}
+.external-survey p {
+  margin-block: 12px 20px;
+  line-height: 1.8;
+}

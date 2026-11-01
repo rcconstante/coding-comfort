@@ -42,3 +42,9 @@ English and Filipino notices now explicitly identify Philippine academic use. Th
 ## Maintenance review
 
 The codebase guide documents the existing public/admin/API/UI/domain/backend boundaries. Maintained source has consistent formatting, unused-local/parameter checks, and a single `npm run check` command covering frontend/backend types, lint, and all 19 tests. Self-care consent translations are stored with the other bilingual copy; stale translation fields were removed. Generated bindings, credentials, binaries, and ignored scratch files remain outside formatting and application typechecking. No UI flow or questionnaire wording changed in this cleanup.
+
+## Experience invitation and Google Forms
+
+Public experience links now say “How was your experience?” / “Kumusta ang iyong karanasan?” and appear below self-care activities and in the footer as well as results. Admins can configure the optional external Google Forms URL in the Survey tab. It starts empty, so no unrelated example survey receives participant data. External responses are not part of the app’s data exports. Verify the form’s intended owner, published access, email collection, and consent/privacy wording before enabling it.
+
+Validation: 20 tests, formatting, frontend/backend types, lint, production build, and deployed anonymous survey-write denial. The production schema/functions were deployed. Browser control remains unavailable for a final visual/admin interaction rehearsal.

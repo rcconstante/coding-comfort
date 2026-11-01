@@ -1,4 +1,5 @@
 "use client";
+import { ExternalSurvey } from "./external-survey";
 import { useState } from "react";
 import Link from "next/link";
 import { useMutation } from "convex/react";
@@ -66,6 +67,7 @@ export function Evaluation({ locale }: { locale: Locale }) {
           title={t.thanks}
           description={t.thanksBody}
         />
+        <ExternalSurvey locale={locale} />
         <ActionLink href="/dashboard" locale={locale}>
           {t.home}
         </ActionLink>
@@ -78,6 +80,7 @@ export function Evaluation({ locale }: { locale: Locale }) {
         title={t.evaluationTitle}
         description={t.evaluationIntro}
       />
+      <ExternalSurvey locale={locale} />
       <form className="surface evaluation-form" onSubmit={send}>
         <div className="research-consent">
           <p>{t.evaluationDetails}</p>

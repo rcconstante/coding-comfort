@@ -21,6 +21,7 @@ import {
   validateNewPassword,
   validatePasswordChange,
 } from "../lib/research-validation";
+import { SurveySettings } from "./survey-settings";
 import type { Instrument } from "../lib/instrument";
 import logo from "../../public/header-logo.webp";
 
@@ -300,7 +301,7 @@ function ResearchPanel({
     "overview",
     "screenings",
     "feedback",
-    ...(me.role === "admin" ? ["questions", "users"] : []),
+    ...(me.role === "admin" ? ["questions", "users", "survey"] : []),
   ];
   return (
     <>
@@ -342,6 +343,8 @@ function ResearchPanel({
         <Records kind="screenings" />
       ) : tab === "feedback" ? (
         <Records kind="feedback" />
+      ) : tab === "survey" ? (
+        <SurveySettings />
       ) : tab === "questions" ? (
         <QuestionsEditor />
       ) : (

@@ -97,3 +97,11 @@ npm audit --omit=dev
 Tests cover all score boundaries/item assignments, invalid inputs, bounded model selections, output safety regressions, encryption/decryption and tampering, feedback/account validation, and spreadsheet escaping. Live integration checks cover queued recovery, replay prevention, server-gate rejection, private routes, and headers. Screenshots use synthetic data without research submission.
 
 See [pilot readiness](docs/pilot-readiness.md) for the release checklist. Software tests cannot supply translation sign-off, ethics/consent approval, retention policy approval, clinical validation, or guaranteed provider availability. The supplied wording in items 4/6/14 still needs the research team's review; no questionnaire text has been silently rewritten.
+
+## Experience questionnaire and external survey
+
+Participants see “How was your experience?” after results, below self-care activities, and in the public footer. The in-app questionnaire remains optional and works without completing screening. Its responses remain available in the researcher dashboard and Excel exports.
+
+An administrator can set or remove a published Google Forms response URL under **Admin → Survey**. Only HTTPS `forms.gle` links or `docs.google.com/forms/.../viewform` links without parameters are accepted. Editing links and prefilled participant data are rejected. Saving requires an active admin with a changed initial password and creates an audit record. Leaving it blank hides the external button; no invented form is shipped.
+
+The optional Google Forms link appears on the experience page, including after in-app submission. It opens a new tab without passing app answers or a referrer. External responses are handled by the form owner and are not imported into this app. The study team must check the form’s access permissions, email collection, and consent/privacy wording before enabling it. No new Vercel variable is needed.

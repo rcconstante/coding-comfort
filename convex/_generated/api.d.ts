@@ -17,6 +17,7 @@ import type * as reflection from "../reflection.js";
 import type * as reflection_worker from "../reflection_worker.js";
 import type * as research from "../research.js";
 import type * as researchers from "../researchers.js";
+import type * as survey from "../survey.js";
 
 import type {
   ApiFromModules,
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   reflection_worker: typeof reflection_worker;
   research: typeof research;
   researchers: typeof researchers;
+  survey: typeof survey;
 }>;
 
 /**

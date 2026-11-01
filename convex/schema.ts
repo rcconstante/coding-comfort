@@ -111,4 +111,8 @@ export default defineSchema({
     target: v.string(),
     createdAt: v.number(),
   }),
+  surveySettings: defineTable({ key: v.string(), url: v.string() }).index(
+    "by_key",
+    ["key"],
+  ),
 });

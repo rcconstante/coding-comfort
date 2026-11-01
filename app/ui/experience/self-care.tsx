@@ -11,6 +11,7 @@ import { useSession, updateSession } from "../../lib/use-session";
 import { ui } from "../../lib/experience-copy";
 import type { Locale } from "../../lib/copy";
 import { activities, type Activity } from "../../lib/activities";
+import { ExperienceInvite } from "./experience-invite";
 import { DurationSelect } from "../duration-select";
 
 const activityImages = [
@@ -333,6 +334,7 @@ export function SelfCare({
       ) : (
         <Planner locale={locale} />
       )}
+      <ExperienceInvite locale={locale} />
       {activity !== "breathing" && (
         <div className="form-actions centered">
           <Button
