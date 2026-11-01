@@ -4,6 +4,7 @@ import { InformationCircleIcon } from "@hugeicons/core-free-icons";
 import { Card, CardContent } from "../ui/card";
 import { copy, getLocale, type PageQuery } from "../lib/copy";
 import character from "../../public/home.webp";
+import { ActionLink } from "../ui/experience/shared";
 
 export default async function Home({ searchParams }: { searchParams: PageQuery }) {
   const locale = getLocale(await searchParams);
@@ -16,6 +17,11 @@ export default async function Home({ searchParams }: { searchParams: PageQuery }
           <h1 id="hero-title">Coding Comfort</h1>
           <h2>{t.tagline}</h2>
           <p className="hero-description">{t.description}</p>
+          <div className="form-actions">
+            <ActionLink href="/dashboard" locale={locale}>
+              {t.start}
+            </ActionLink>
+          </div>
         </div>
         <Image
           className="hero-character"
