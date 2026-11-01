@@ -49,6 +49,15 @@ export function validateNewPassword(password: string, account: string) {
       "Use 12–128 characters and a password different from your email or username.",
     );
 }
+export function validatePasswordChange(
+  newPassword: string,
+  currentPassword: string,
+  account: string,
+) {
+  validateNewPassword(newPassword, account);
+  if (newPassword === currentPassword)
+    throw new Error("Choose a password different from your current password.");
+}
 export function safeSpreadsheetText(value: string) {
   return /^[\s]*[=+@-]/.test(value) ? `'${value}` : value;
 }

@@ -19,6 +19,7 @@ import { subscales } from "../lib/dass";
 import {
   validateAccount,
   validateNewPassword,
+  validatePasswordChange,
 } from "../lib/research-validation";
 import type { Instrument } from "../lib/instrument";
 
@@ -137,7 +138,13 @@ export function AdminLogin() {
     </div>
   );
 }
-function PasswordChange({ onDone }: { onDone?: () => void }) {
+function PasswordChange({
+  account,
+  onDone,
+}: {
+  account: string;
+  onDone?: () => void;
+}) {
   const change = useAction(api.researchers.changePassword);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -146,6 +153,15 @@ function PasswordChange({ onDone }: { onDone?: () => void }) {
     const form = event.currentTarget;
     const data = new FormData(form);
     const newPassword = String(data.get("newPassword"));
+    const currentPassword = String(data.get("currentPassword"));
+    try {
+      validatePasswordChange(newPassword, currentPassword, account);
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "Check your new password.",
+      );
+      return;
+    }
     if (newPassword !== String(data.get("confirmation"))) {
       setError("The new passwords do not match.");
       return;
@@ -154,7 +170,7 @@ function PasswordChange({ onDone }: { onDone?: () => void }) {
     setError("");
     try {
       await change({
-        currentPassword: String(data.get("currentPassword")),
+        currentPassword,
         newPassword,
       });
       form.reset();
@@ -255,7 +271,10 @@ export function AdminDashboard() {
       </header>
       <main className="admin-main page-width">
         {me.mustChangePassword || password ? (
-          <PasswordChange onDone={() => setPassword(false)} />
+          <PasswordChange
+            account={me.account}
+            onDone={() => setPassword(false)}
+          />
         ) : (
           <ResearchPanel me={me} changePassword={() => setPassword(true)} />
         )}
@@ -760,7 +779,11 @@ function InstrumentEditor({ initial }: { initial: Instrument }) {
   );
 }
 function Users({ current }: { current: string }) {
-  const {results:list,status,loadMore} = usePaginatedQuery(api.researchers.list,{}, {initialNumItems:25});
+  const {
+    results: list,
+    status,
+    loadMore,
+  } = usePaginatedQuery(api.researchers.list, {}, { initialNumItems: 25 });
   const create = useAction(api.researchers.create);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -834,7 +857,7 @@ function Users({ current }: { current: string }) {
       </form>
       <section className="surface admin-users">
         <h2>Researcher accounts</h2>
-        {status!=="LoadingFirstPage" ? (
+        {status !== "LoadingFirstPage" ? (
           list.map((user) => (
             <UserRow
               key={user._id}
@@ -845,7 +868,16 @@ function Users({ current }: { current: string }) {
         ) : (
           <p aria-busy="true">Loading accounts…</p>
         )}
-        {(status==="CanLoadMore" || status==="LoadingMore") && <Button variant="ghost" className="pill-button pill-secondary" disabled={status==="LoadingMore"} onClick={()=>loadMore(25)}>{status==="LoadingMore"?"Loading…":"Load more accounts"}</Button>}
+        {(status === "CanLoadMore" || status === "LoadingMore") && (
+          <Button
+            variant="ghost"
+            className="pill-button pill-secondary"
+            disabled={status === "LoadingMore"}
+            onClick={() => loadMore(25)}
+          >
+            {status === "LoadingMore" ? "Loading…" : "Load more accounts"}
+          </Button>
+        )}
       </section>
     </>
   );

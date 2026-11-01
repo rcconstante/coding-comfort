@@ -20,6 +20,7 @@ import { requireAdmin } from "./permissions";
 import {
   validateAccount,
   validateNewPassword,
+  validatePasswordChange,
 } from "../app/lib/research-validation";
 
 export const me = query({
@@ -41,11 +42,15 @@ export const me = query({
   },
 });
 export const list = query({
-  args: {paginationOpts:paginationOptsValidator},
-  handler: async (ctx,args) => {
+  args: { paginationOpts: paginationOptsValidator },
+  handler: async (ctx, args) => {
     await requireAdmin(ctx);
-    if(args.paginationOpts.numItems>100)throw new ConvexError("Use a smaller page size.");
-    return await ctx.db.query("researchers").order("desc").paginate(args.paginationOpts);
+    if (args.paginationOpts.numItems > 100)
+      throw new ConvexError("Use a smaller page size.");
+    return await ctx.db
+      .query("researchers")
+      .order("desc")
+      .paginate(args.paginationOpts);
   },
 });
 export const authorizeAdmin = internalQuery({
@@ -139,13 +144,32 @@ export const changePassword = action({
   args: { currentPassword: v.string(), newPassword: v.string() },
   handler: async (ctx, args): Promise<void> => {
     const user = await ctx.runQuery(internal.researchers.authorizeSelf, {});
-    validateNewPassword(args.newPassword, user.account);
-    if (args.newPassword === args.currentPassword)
-      throw new ConvexError("Choose a different password.");
-    await retrieveAccount(ctx, {
-      provider: "password",
-      account: { id: user.account, secret: args.currentPassword },
-    });
+    try {
+      validatePasswordChange(
+        args.newPassword,
+        args.currentPassword,
+        user.account,
+      );
+    } catch (error) {
+      if (error instanceof Error) throw new ConvexError(error.message);
+      throw error;
+    }
+    try {
+      await retrieveAccount(ctx, {
+        provider: "password",
+        account: { id: user.account, secret: args.currentPassword },
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === "InvalidSecret")
+          throw new ConvexError("Your current password is incorrect.");
+        if (error.message === "TooManyFailedAttempts")
+          throw new ConvexError(
+            "Too many incorrect attempts. Please try again later.",
+          );
+      }
+      throw error;
+    }
     await modifyAccountCredentials(ctx, {
       provider: "password",
       account: { id: user.account, secret: args.newPassword },

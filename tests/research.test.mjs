@@ -4,6 +4,7 @@ import {
   validateEvaluation,
   validateAccount,
   validateNewPassword,
+  validatePasswordChange,
   safeSpreadsheetText,
 } from "../app/lib/research-validation.ts";
 import { parseInstrument } from "../app/lib/instrument.ts";
@@ -33,6 +34,27 @@ test("administrator accounts normalize consistently and private passwords cannot
   assert.doesNotThrow(() =>
     validateNewPassword("a-private-long-passphrase", "researcher@example.com"),
   );
+});
+test("password changes reject the account, current password, and invalid lengths with actionable messages", () => {
+  const account = "researcher@example.com";
+  const current = "current-private-password";
+  for (const password of [
+    "x".repeat(11),
+    "x".repeat(129),
+    account.toUpperCase(),
+  ])
+    assert.throws(
+      () => validatePasswordChange(password, current, account),
+      /12–128 characters/,
+    );
+  assert.throws(
+    () => validatePasswordChange(current, current, account),
+    /different from your current password/,
+  );
+  for (const password of ["x".repeat(12), "x".repeat(128)])
+    assert.doesNotThrow(() =>
+      validatePasswordChange(password, current, account),
+    );
 });
 test("spreadsheet comments cannot become formulas", () => {
   for (const text of [
