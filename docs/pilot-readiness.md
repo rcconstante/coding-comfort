@@ -38,3 +38,7 @@ Validation: 19 tests, lint, production build, six navigation-response checks, bi
 ## Plain-language data notice
 
 English and Filipino notices now explicitly identify Philippine academic use. The database location appears separately as Virginia, United States, based on the configured production region. Research and feedback notices list their own submitted fields instead of repeating a confusing country statement. The policy explains local storage, optional sharing, staff downloads, the encrypted AI recovery copy, request records, and the absence of an automatic research-record deletion period. No ethics approval, Philippine-only hosting, complete anonymity, or guaranteed data safety is claimed. Study owners still need to approve and supply their retention policy.
+
+## Maintenance review
+
+The codebase guide documents the existing public/admin/API/UI/domain/backend boundaries. Maintained source has consistent formatting, unused-local/parameter checks, and a single `npm run check` command covering frontend/backend types, lint, and all 19 tests. Self-care consent translations are stored with the other bilingual copy; stale translation fields were removed. Generated bindings, credentials, binaries, and ignored scratch files remain outside formatting and application typechecking. No UI flow or questionnaire wording changed in this cleanup.

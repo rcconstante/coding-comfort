@@ -6,7 +6,11 @@ import { copy, getLocale, type PageQuery } from "../lib/copy";
 import character from "../../public/home.webp";
 import { ActionLink } from "../ui/experience/shared";
 
-export default async function Home({ searchParams }: { searchParams: PageQuery }) {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: PageQuery;
+}) {
   const locale = getLocale(await searchParams);
   const t = copy[locale];
 

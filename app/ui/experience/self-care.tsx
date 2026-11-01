@@ -13,7 +13,12 @@ import type { Locale } from "../../lib/copy";
 import { activities, type Activity } from "../../lib/activities";
 import { DurationSelect } from "../duration-select";
 
-const activityImages = ["breath", "grounding-act", "guide-journaling", "heart"] as const;
+const activityImages = [
+  "breath",
+  "grounding-act",
+  "guide-journaling",
+  "heart",
+] as const;
 
 function Breathing({ locale }: { locale: Locale }) {
   const t = ui[locale];

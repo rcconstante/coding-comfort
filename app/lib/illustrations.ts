@@ -16,22 +16,22 @@ import image14 from "../../public/robot.webp";
 import image15 from "../../public/stress.webp";
 
 export const illustrations = {
-  "ai": image0,
-  "anxeity": image1,
-  "breath": image2,
-  "crisis": image3,
+  ai: image0,
+  anxeity: image1,
+  breath: image2,
+  crisis: image3,
   "Dass-screening": image4,
-  "depression": image5,
-  "graph": image6,
+  depression: image5,
+  graph: image6,
   "grounding-act": image7,
   "guide-journaling": image8,
-  "heart": image9,
-  "help": image10,
-  "leave": image11,
-  "note": image12,
-  "referral": image13,
-  "robot": image14,
-  "stress": image15,
+  heart: image9,
+  help: image10,
+  leave: image11,
+  note: image12,
+  referral: image13,
+  robot: image14,
+  stress: image15,
 } as const;
 
 export type Illustration = keyof typeof illustrations;

@@ -11,7 +11,11 @@
     "convex:deploy": "convex deploy",
     "admin:configure-auth": "node scripts/configure-auth.mjs",
     "admin:provision": "node scripts/provision-researcher.mjs",
-    "test:navigation": "node scripts/check-navigation.mjs"
+    "test:navigation": "node scripts/check-navigation.mjs",
+    "format": "prettier --write \"app/**/*.{ts,tsx,css}\" \"convex/**/*.ts\" \"scripts/**/*.mjs\" \"tests/**/*.mjs\" \"*.{ts,mjs,json}\"",
+    "format:check": "prettier --check \"app/**/*.{ts,tsx,css}\" \"convex/**/*.ts\" \"scripts/**/*.mjs\" \"tests/**/*.mjs\" \"*.{ts,mjs,json}\"",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p convex/tsconfig.json",
+    "check": "npm run format:check && npm run typecheck && npm run lint && npm test"
   },
   "dependencies": {
     "@auth/core": "^0.41.3",
@@ -38,6 +42,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
+    "prettier": "^3.9.10",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5"

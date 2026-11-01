@@ -6,9 +6,5 @@ export function ConvexClientProvider({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <ConvexProvider client={client}>
-      {children}
-    </ConvexProvider>
-  );
+  return <ConvexProvider client={client}>{children}</ConvexProvider>;
 }

@@ -5,7 +5,6 @@ const en = {
   researchDetails:
     "If you agree to share your screening, the study team receives your 21 answers, three scores, question version, language, date, and participant code. The app does not ask for your name. Your journal is not included. Clearing this browser does not remove records already sent to the team.",
   researchPrivacyTitle: "Privacy details",
-  privacyTitle: "Research privacy",
   privacyChoiceTitle: "Your choice",
   privacyChoice:
     "You can use the screening without sharing your responses with the research team.",
@@ -14,7 +13,6 @@ const en = {
   privacyRemoval:
     "Contact the team with the participant code shown after saving.",
   privacyContact: "Contact the team",
-  backToResults: "Back to results",
   shareResearch: "Share with the research team (optional)",
   saving: "Saving your consented screening…",
   saved: "Saved for research",
@@ -52,7 +50,6 @@ const fil: typeof en = {
   researchDetails:
     "Kung papayag kang ibahagi ang screening, matatanggap ng study team ang 21 sagot, tatlong score, bersyon ng mga tanong, wika, petsa, at participant code. Hindi hinihingi ng app ang pangalan mo. Hindi kasama ang journal. Hindi nabubura ang naipadalang tala kapag binura ang datos sa browser.",
   researchPrivacyTitle: "Detalye sa privacy",
-  privacyTitle: "Privacy sa pananaliksik",
   privacyChoiceTitle: "Ikaw ang magpapasya",
   privacyChoice:
     "Maaari mong gamitin ang screening nang hindi nagbabahagi ng mga sagot sa research team.",
@@ -61,7 +58,6 @@ const fil: typeof en = {
   privacyRemoval:
     "Kontakin ang team at ibigay ang participant code na ipinapakita pagkatapos mag-save.",
   privacyContact: "Kontakin ang team",
-  backToResults: "Bumalik sa mga resulta",
   shareResearch: "Ibahagi sa research team (opsyonal)",
   saving: "Sine-save ang screening na pinayagan mo…",
   saved: "Na-save para sa pananaliksik",

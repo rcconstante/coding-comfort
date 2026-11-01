@@ -1,4 +1,13 @@
 const en = {
+  selfCareConsentTitle: "A moment for yourself",
+  selfCareConsentIntro:
+    "Write a reflection or choose a small step. No screening is required.",
+  selfCareConsentItems: [
+    "Your journal and chosen step stay in this browser.",
+    "They are not shared with researchers or AI.",
+    "You can clear local data using End session.",
+  ],
+  openSelfCare: "Open Self-Care",
   consentTitle: "Before We Begin",
   consentIntro:
     "Please read the following information carefully before continuing.",
@@ -212,6 +221,15 @@ const en = {
     "For platform questions, technical concerns, and feedback. This email is not an emergency service.",
 };
 const fil: typeof en = {
+  selfCareConsentTitle: "Isang sandali para sa sarili",
+  selfCareConsentIntro:
+    "Magsulat o pumili ng maliit na hakbang. Hindi kailangang sagutan ang screening.",
+  selfCareConsentItems: [
+    "Nananatili sa browser na ito ang journal at napili mong hakbang.",
+    "Hindi ibinabahagi sa researcher o AI ang mga ito.",
+    "Maaari mong burahin ang lokal na datos sa pamamagitan ng End session.",
+  ],
+  openSelfCare: "Buksan ang Self-Care",
   consentTitle: "Bago Tayo Magsimula",
   consentIntro: "Basahing mabuti ang sumusunod na impormasyon bago magpatuloy.",
   consentItems: [

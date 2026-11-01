@@ -6,7 +6,11 @@ import { Screening } from "../../ui/experience/screening";
 import { ResultsPage, Reflection } from "../../ui/experience/results";
 import { SelfCare } from "../../ui/experience/self-care";
 import { activities, type Activity } from "../../lib/activities";
-import { Contact, Support, type SupportView } from "../../ui/experience/support";
+import {
+  Contact,
+  Support,
+  type SupportView,
+} from "../../ui/experience/support";
 import { ResearchPrivacy } from "../../ui/experience/research-privacy";
 
 type SectionProps = {
@@ -23,7 +27,10 @@ const validSections = [
   "evaluation",
   "privacy",
 ];
-export default async function SectionPage({ params, searchParams }: SectionProps) {
+export default async function SectionPage({
+  params,
+  searchParams,
+}: SectionProps) {
   const [{ section }, query] = await Promise.all([params, searchParams]);
   if (!validSections.includes(section)) notFound();
   const locale = getLocale(query);

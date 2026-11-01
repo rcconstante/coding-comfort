@@ -42,7 +42,10 @@ export async function GET(request: NextRequest) {
         (value) => value !== null && !isCalendarDate(value),
       )
     )
-      return NextResponse.json({ error: "Invalid dates." }, { status: 400, headers: privateHeaders });
+      return NextResponse.json(
+        { error: "Invalid dates." },
+        { status: 400, headers: privateHeaders },
+      );
     const from = fromText
         ? Date.parse(`${fromText}T00:00:00+08:00`)
         : undefined,

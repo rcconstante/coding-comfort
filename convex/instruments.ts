@@ -73,7 +73,7 @@ export const publish = mutation({
           "Keep all 21 questions and four response options in both languages.",
         );
     }
-    const version = `dass21-${Date.now()}-${Math.random().toString(36).slice(2,10)}`;
+    const version = `dass21-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
     await ctx.db.insert("instruments", {
       version,
       questions: args.questions,

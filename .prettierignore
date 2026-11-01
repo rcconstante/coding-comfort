@@ -1,0 +1,11 @@
+node_modules
+.next
+tmp
+convex/_generated
+public
+docs/screenshots
+package-lock.json
+next-env.d.ts
+.env*
+*.pdf
+*.tsbuildinfo

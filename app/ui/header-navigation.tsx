@@ -73,7 +73,10 @@ export function HeaderNavigation({
         className="header-nav"
         aria-label={title}
         onClick={(event) => {
-          if (event.target instanceof Element && event.target.closest("a[href]"))
+          if (
+            event.target instanceof Element &&
+            event.target.closest("a[href]")
+          )
             setOpen(false);
         }}
       >

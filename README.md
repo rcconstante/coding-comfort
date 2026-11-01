@@ -8,6 +8,8 @@ English/Filipino DASS-21 screening, supportive explanations, self-care, and a pr
 ![Results reflection](docs/screenshots/reflection.jpg)
 ![Mobile navigation](docs/screenshots/mobile-menu.jpg)
 
+Source layout and maintenance commands: [codebase guide](docs/codebase-guide.md).
+
 ## Run locally
 
 ```sh
@@ -68,7 +70,7 @@ All 19 supplied illustrations are preserved as WebP (8.2 MB → 1.2 MB). A small
 
 The model receives only three calculated scores and selects an opening and one/two low-risk steps from a finite reviewed menu. Arbitrary model prose is **never displayed**. The application constructs each subscale explanation from its validated score and category and supplies the professional-support guidance. This prevents model-generated diagnoses, medication instructions, invented causes, score changes, and clinical decisions from becoming UI text. It is intentionally bounded assistance rather than a free-form chatbot.
 
-One atomic backend transaction claims a screening session and schedules exactly one model attempt. Concurrent submissions/reloads reuse the same job. The browser creates a private recovery key before requesting work; **only its public key is sent**. The result is encrypted with AES-GCM and an RSA-OAEP-wrapped key. Reloaded pages recover and decrypt that same result without a second generation. The encrypted result expires after 24 hours; an unrecoverable provider failure does not automatically generate again. A timeout closes abandoned pending jobs after 90 seconds. The response, private key, answers, and journal persist locally until End session or browser-data removal. Losing the local private key prevents recovery.
+One atomic backend transaction claims a screening session and schedules exactly one model attempt. Concurrent submissions/reloads reuse the same job. The browser creates a private recovery key before requesting work; **only its public key is sent**. The result is encrypted with AES-GCM and an RSA-OAEP-wrapped key. Reloaded pages recover and decrypt that same result without a second generation. The encrypted result expires after 24 hours; an unrecoverable provider failure does not automatically generate again. A timeout closes abandoned pending jobs after 90 seconds. While generation is pending, the recovery keys stay in this browser. After successful recovery, the cached explanation replaces those keys. The saved explanation, answers, and journal remain until End session or browser-data removal. Losing the private key before recovery prevents decryption.
 
 ## Security and privacy
 
@@ -87,8 +89,7 @@ The Excel writer was replaced to remove the previous production dependency advis
 ## Validation and pilot prerequisites
 
 ```sh
-npm test
-npm run lint
+npm run check
 npm run build
 npm audit --omit=dev
 ```

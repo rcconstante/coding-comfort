@@ -10,18 +10,17 @@ export function PublicHeader() {
   const query = useSearchParams();
   const locale = getLocale({ lang: query.get("lang") ?? undefined });
   const section = path.split("/")[1];
-  const current: "landing" | "dashboard" | Section =
-    !section
-      ? "landing"
-      : section === "dashboard"
-        ? "dashboard"
-        : ["results", "reflection", "evaluation", "privacy"].includes(section)
-          ? "results"
-          : section === "screening"
-            ? "screening"
-            : section === "self-care"
-              ? "self-care"
-              : "support";
+  const current: "landing" | "dashboard" | Section = !section
+    ? "landing"
+    : section === "dashboard"
+      ? "dashboard"
+      : ["results", "reflection", "evaluation", "privacy"].includes(section)
+        ? "results"
+        : section === "screening"
+          ? "screening"
+          : section === "self-care"
+            ? "self-care"
+            : "support";
 
   return (
     <SiteHeader

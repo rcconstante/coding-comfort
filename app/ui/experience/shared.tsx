@@ -83,7 +83,10 @@ export function ActionLink({
       variant={secondary ? "ghost" : "default"}
       className={`pill-button ${secondary ? "pill-secondary" : ""}`}
     >
-      <Link href={`${href}${href.includes("?") ? "&" : "?"}lang=${locale}`} prefetch={true}>
+      <Link
+        href={`${href}${href.includes("?") ? "&" : "?"}lang=${locale}`}
+        prefetch={true}
+      >
         {children}
         <HugeiconsIcon icon={ArrowRight01Icon} size={16} aria-hidden="true" />
       </Link>

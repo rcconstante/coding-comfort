@@ -29,10 +29,7 @@ function run(args, value) {
 try {
   run(["env", "set", "RESEARCHER_SETUP_ACCOUNT"], input.account);
   run(["env", "set", "RESEARCHER_SETUP_PASSWORD"], input.password);
-  run([
-    "run",
-    input.reset ? "bootstrap:resetPassword" : "bootstrap:provision",
-  ]);
+  run(["run", input.reset ? "bootstrap:resetPassword" : "bootstrap:provision"]);
   console.log(
     "Researcher account provisioned; first login requires a private password.",
   );
