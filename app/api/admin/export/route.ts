@@ -29,6 +29,13 @@ export async function GET(request: NextRequest) {
         { error: "Researcher access required." },
         { status: 403, headers: privateHeaders },
       );
+    const maintenance = await fetchQuery(
+      api.dataManagement.status,
+      {},
+      { token },
+    );
+    if (maintenance?.status === "resetting")
+      throw new Error("RESET_IN_PROGRESS");
     const kind = request.nextUrl.searchParams.get("kind");
     if (kind !== "screenings" && kind !== "feedback")
       return NextResponse.json(
@@ -75,6 +82,7 @@ export async function GET(request: NextRequest) {
         ? [
             { header: "Participant code", key: "participantCode", width: 20 },
             { header: "Submitted at (UTC)", key: "submittedAt", width: 28 },
+            { header: "Corrected at (UTC)", key: "updatedAt", width: 28 },
             { header: "Language", key: "locale", width: 12 },
             {
               header: "Questionnaire version",
@@ -96,6 +104,7 @@ export async function GET(request: NextRequest) {
         : [
             { header: "Participant code", key: "participantCode", width: 20 },
             { header: "Submitted at (UTC)", key: "submittedAt", width: 28 },
+            { header: "Corrected at (UTC)", key: "updatedAt", width: 28 },
             { header: "Language", key: "locale", width: 12 },
             { header: "Ease of use (1-5)", key: "ease", width: 22 },
             { header: "Clarity (1-5)", key: "clarity", width: 22 },
@@ -122,6 +131,9 @@ export async function GET(request: NextRequest) {
           sheet.rows.push({
             participantCode: row.participantCode,
             submittedAt: new Date(row.submittedAt).toISOString(),
+            updatedAt: row.updatedAt
+              ? new Date(row.updatedAt).toISOString()
+              : "",
             locale: row.locale,
             instrumentVersion: row.instrumentVersion,
             consentVersion: row.consentVersion,
@@ -152,6 +164,9 @@ export async function GET(request: NextRequest) {
           sheet.rows.push({
             participantCode: row.participantCode,
             submittedAt: new Date(row.submittedAt).toISOString(),
+            updatedAt: row.updatedAt
+              ? new Date(row.updatedAt).toISOString()
+              : "",
             locale: row.locale,
             ease: row.ease,
             clarity: row.clarity,
@@ -250,6 +265,12 @@ export async function GET(request: NextRequest) {
       columns: [{ width: 95 }, { width: 35 }],
     });
     const buffer = await writeXlsxFile(sheets).toBuffer();
+    const latest = await fetchQuery(api.dataManagement.status, {}, { token });
+    if (
+      latest?.status === "resetting" ||
+      latest?.requestedAt !== maintenance?.requestedAt
+    )
+      throw new Error("RESET_DURING_EXPORT");
     return new NextResponse(new Uint8Array(buffer), {
       headers: {
         "Content-Type":

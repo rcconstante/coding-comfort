@@ -30,6 +30,7 @@ export default defineSchema({
     consentedAt: v.number(),
   }).index("by_token", ["tokenHash"]),
   screenings: defineTable({
+    updatedAt: v.optional(v.number()),
     participantId: v.id("participants"),
     submissionKey: v.string(),
     locale: v.union(v.literal("en"), v.literal("fil")),
@@ -44,6 +45,7 @@ export default defineSchema({
     .index("by_submission", ["participantId", "submissionKey"])
     .index("by_submitted", ["submittedAt"]),
   evaluations: defineTable({
+    updatedAt: v.optional(v.number()),
     participantId: v.id("participants"),
     submissionKey: v.string(),
     locale: v.union(v.literal("en"), v.literal("fil")),
@@ -115,4 +117,21 @@ export default defineSchema({
     "by_key",
     ["key"],
   ),
+  recordRevisions: defineTable({
+    recordId: v.string(),
+    kind: v.union(v.literal("screenings"), v.literal("evaluations")),
+    before: v.string(),
+    reason: v.string(),
+    actor: v.id("users"),
+    createdAt: v.number(),
+  }).index("by_record", ["recordId"]),
+  dataMaintenance: defineTable({
+    key: v.string(),
+    status: v.union(v.literal("resetting"), v.literal("complete")),
+    stage: v.number(),
+    deleted: v.number(),
+    requestedAt: v.number(),
+    completedAt: v.optional(v.number()),
+    actor: v.id("users"),
+  }).index("by_key", ["key"]),
 });

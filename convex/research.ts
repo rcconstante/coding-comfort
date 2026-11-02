@@ -9,6 +9,7 @@ import {
   FEEDBACK_CONSENT_VERSION,
   validateEvaluation,
 } from "../app/lib/research-validation";
+import { assertDataWritable } from "./dataAccess";
 import { requireResearcher } from "./permissions";
 
 const locale = v.union(v.literal("en"), v.literal("fil"));
@@ -86,6 +87,7 @@ export const submitScreening = mutation({
     instrumentVersion: v.string(),
   },
   handler: async (ctx, args) => {
+    await assertDataWritable(ctx);
     if (
       !args.consent ||
       args.consentVersion !== RESEARCH_CONSENT_VERSION ||
@@ -161,6 +163,7 @@ export const submitEvaluation = mutation({
     comment: v.string(),
   },
   handler: async (ctx, args) => {
+    await assertDataWritable(ctx);
     if (
       !args.consent ||
       args.consentVersion !== FEEDBACK_CONSENT_VERSION ||

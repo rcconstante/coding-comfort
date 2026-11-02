@@ -2663,3 +2663,82 @@ html {
   margin-block: 12px 20px;
   line-height: 1.8;
 }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: #30213f80;
+  z-index: 70;
+}
+.admin-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(760px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  background: #fffafd;
+  color: #503360;
+  border: 1px solid #e5d5f0;
+  border-radius: 24px;
+  padding: clamp(20px, 4vw, 32px);
+  z-index: 71;
+  box-shadow: 0 24px 80px #30213f40;
+}
+.admin-modal h2 {
+  font-size: 24px;
+  font-weight: 600;
+}
+.admin-modal p {
+  line-height: 1.8;
+  margin-block: 12px 20px;
+}
+.admin-modal label {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+.admin-modal input,
+.admin-modal select,
+.admin-modal textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 14px;
+  background: white;
+  border: 1px solid #d9c3e9;
+  border-radius: 12px;
+  font: inherit;
+}
+.admin-modal fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.record-answer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+}
+.record-answer-grid span {
+  font-size: 14px;
+  color: #735d80;
+}
+.correction-history {
+  margin-top: 24px;
+}
+.correction-history pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+.admin-records .text-button + .text-button {
+  margin-left: 16px;
+}
+@media (max-width: 560px) {
+  .record-answer-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

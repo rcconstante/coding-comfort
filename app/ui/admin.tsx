@@ -21,6 +21,7 @@ import {
   validateNewPassword,
   validatePasswordChange,
 } from "../lib/research-validation";
+import { DataManagement, EditRecord } from "./data-management";
 import { SurveySettings } from "./survey-settings";
 import type { Instrument } from "../lib/instrument";
 import logo from "../../public/header-logo.webp";
@@ -301,7 +302,7 @@ function ResearchPanel({
     "overview",
     "screenings",
     "feedback",
-    ...(me.role === "admin" ? ["questions", "users", "survey"] : []),
+    ...(me.role === "admin" ? ["questions", "users", "survey", "data"] : []),
   ];
   return (
     <>
@@ -340,9 +341,11 @@ function ResearchPanel({
       {tab === "overview" ? (
         <Overview />
       ) : tab === "screenings" ? (
-        <Records kind="screenings" />
+        <Records kind="screenings" canEdit={me.role === "admin"} />
       ) : tab === "feedback" ? (
-        <Records kind="feedback" />
+        <Records kind="feedback" canEdit={me.role === "admin"} />
+      ) : tab === "data" ? (
+        <DataManagement />
       ) : tab === "survey" ? (
         <SurveySettings />
       ) : tab === "questions" ? (
@@ -429,7 +432,13 @@ function dateFilter(from: string, to: string) {
     to: to ? Date.parse(`${to}T23:59:59.999+08:00`) : undefined,
   };
 }
-function Records({ kind }: { kind: "screenings" | "feedback" }) {
+function Records({
+  kind,
+  canEdit,
+}: {
+  kind: "screenings" | "feedback";
+  canEdit: boolean;
+}) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [error, setError] = useState("");
@@ -497,9 +506,9 @@ function Records({ kind }: { kind: "screenings" | "feedback" }) {
           Choose an end date on or after the start date.
         </p>
       ) : kind === "screenings" ? (
-        <ScreeningRecords {...dateFilter(from, to)} />
+        <ScreeningRecords {...dateFilter(from, to)} canEdit={canEdit} />
       ) : (
-        <FeedbackRecords {...dateFilter(from, to)} />
+        <FeedbackRecords {...dateFilter(from, to)} canEdit={canEdit} />
       )}{" "}
       {error && (
         <p className="field-error" role="alert">
@@ -515,7 +524,14 @@ const formatDate = (timestamp: number) =>
     timeStyle: "short",
     timeZone: "Asia/Manila",
   }).format(timestamp);
-function ScreeningRecords(filters: { from?: number; to?: number }) {
+function ScreeningRecords({
+  canEdit,
+  ...filters
+}: {
+  from?: number;
+  to?: number;
+  canEdit: boolean;
+}) {
   const { results, status, loadMore } = usePaginatedQuery(
     api.research.listScreenings,
     filters,
@@ -544,7 +560,12 @@ function ScreeningRecords(filters: { from?: number; to?: number }) {
                   {row.participantCode}
                   <small>{row.instrumentVersion}</small>
                 </td>
-                <td>{formatDate(row.submittedAt)}</td>
+                <td>
+                  {formatDate(row.submittedAt)}
+                  {row.updatedAt && (
+                    <small>Corrected {formatDate(row.updatedAt)}</small>
+                  )}
+                </td>
                 <td>{row.locale.toUpperCase()}</td>
                 {subscales.map((key) => (
                   <td key={key}>
@@ -566,6 +587,7 @@ function ScreeningRecords(filters: { from?: number; to?: number }) {
                     {" "}
                     {expanded === row._id ? "Hide" : "View"}
                   </button>
+                  {canEdit && <EditRecord kind="screenings" row={row} />}
                 </td>
               </tr>
             ))}
@@ -593,7 +615,14 @@ function ScreeningRecords(filters: { from?: number; to?: number }) {
     </section>
   );
 }
-function FeedbackRecords(filters: { from?: number; to?: number }) {
+function FeedbackRecords({
+  canEdit,
+  ...filters
+}: {
+  from?: number;
+  to?: number;
+  canEdit: boolean;
+}) {
   const { results, status, loadMore } = usePaginatedQuery(
     api.research.listEvaluations,
     filters,
@@ -612,18 +641,29 @@ function FeedbackRecords(filters: { from?: number; to?: number }) {
               <th>Clarity</th>
               <th>Overall</th>
               <th>Comment</th>
+              {canEdit && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
             {results.map((row) => (
               <tr key={row._id}>
                 <td>{row.participantCode}</td>
-                <td>{formatDate(row.submittedAt)}</td>
+                <td>
+                  {formatDate(row.submittedAt)}
+                  {row.updatedAt && (
+                    <small>Corrected {formatDate(row.updatedAt)}</small>
+                  )}
+                </td>
                 <td>{row.locale.toUpperCase()}</td>
                 <td>{row.ease} / 5</td>
                 <td>{row.clarity} / 5</td>
                 <td>{row.overall} / 5</td>
                 <td className="feedback-comment">{row.comment || "—"}</td>
+                {canEdit && (
+                  <td>
+                    <EditRecord kind="evaluations" row={row} />
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

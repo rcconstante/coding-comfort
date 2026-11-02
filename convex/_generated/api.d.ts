@@ -10,6 +10,8 @@
 
 import type * as auth from "../auth.js";
 import type * as bootstrap from "../bootstrap.js";
+import type * as dataAccess from "../dataAccess.js";
+import type * as dataManagement from "../dataManagement.js";
 import type * as http from "../http.js";
 import type * as instruments from "../instruments.js";
 import type * as permissions from "../permissions.js";
@@ -28,6 +30,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   bootstrap: typeof bootstrap;
+  dataAccess: typeof dataAccess;
+  dataManagement: typeof dataManagement;
   http: typeof http;
   instruments: typeof instruments;
   permissions: typeof permissions;

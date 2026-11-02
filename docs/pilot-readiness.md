@@ -48,3 +48,9 @@ The codebase guide documents the existing public/admin/API/UI/domain/backend bou
 Public experience links now say “How was your experience?” / “Kumusta ang iyong karanasan?” and appear below self-care activities and in the footer as well as results. Admins can configure the optional external Google Forms URL in the Survey tab. It starts empty, so no unrelated example survey receives participant data. External responses are not part of the app’s data exports. Verify the form’s intended owner, published access, email collection, and consent/privacy wording before enabling it.
 
 Validation: 20 tests, formatting, frontend/backend types, lint, production build, and deployed anonymous survey-write denial. The production schema/functions were deployed. Browser control remains unavailable for a final visual/admin interaction rehearsal.
+
+## Admin record corrections and pilot reset
+
+Added protected correction modals and a typed-confirmation data-reset modal. Correction history retains the prior record and reason without exposing submission capability keys. Deterministic scores and summary distributions/averages update transactionally. Optimistic version checks reject stale edits. A scheduled reset clears only research records/history/totals in batches; accounts, instrument versions, survey settings, security limits, audit logs, browser data, and external surveys are retained.
+
+Backend integration tests run against an isolated in-memory Convex test database: admin-only authorization, invalid-answer rejection, original snapshot preservation, stale-write rejection, derived score/average updates, typed reset confirmation, submission blocking, more than 200 records cleared across batches, retained settings/accounts, and successful new submissions after completion. No production participant records were edited or reset during verification. Browser control is disabled, so the new confirmation/editor modals still require a manual keyboard/mobile rehearsal.
