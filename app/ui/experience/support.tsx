@@ -126,15 +126,19 @@ export function Support({
                       ? t.ncmhDescription
                       : t.organisationInfo}
                   </p>
-                  {resource.phone ? (
-                    <>
-                      <a className="resource-phone" href={resource.call}>
-                        {resource.phone}
+                  <div className="resource-contacts">
+                    {resource.contacts.map((contact) => (
+                      <a
+                        key={contact.href}
+                        className="resource-phone"
+                        href={contact.href}
+                      >
+                        {contact.label}
                       </a>
-                      <span className="resource-hours">{resource.hours}</span>
-                    </>
-                  ) : (
-                    <p className="resource-note">{t.unverified}</p>
+                    ))}
+                  </div>
+                  {resource.hours && (
+                    <span className="resource-hours">{resource.hours}</span>
                   )}
                   <a
                     className="resource-website"

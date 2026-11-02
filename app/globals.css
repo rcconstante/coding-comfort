@@ -3234,3 +3234,16 @@ html {
 .admin-header .admin-logo {
   max-width: 100%;
 }
+
+.resource-contacts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-block: 16px;
+}
+.resource-contacts .resource-phone {
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+  line-height: 1.6;
+}
