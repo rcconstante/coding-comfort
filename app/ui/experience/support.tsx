@@ -72,7 +72,7 @@ export function Support({
                   {t.call} {supportResources[0].phone}
                 </a>
               </Button>
-              <p className="quiet-note">NCMH · {t.hours}</p>
+              <p className="quiet-note">NCMH</p>
             </div>
           )}
           {view === "referral" ? (
