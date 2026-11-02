@@ -16,6 +16,7 @@ const score = v.object({
 export default defineSchema({
   ...authTables,
   researchers: defineTable({
+    firstName: v.optional(v.string()),
     userId: v.id("users"),
     account: v.string(),
     role: v.union(v.literal("admin"), v.literal("researcher")),

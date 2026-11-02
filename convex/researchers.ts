@@ -16,11 +16,12 @@ import {
 } from "@convex-dev/auth/server";
 import { v, ConvexError } from "convex/values";
 import { paginationOptsValidator } from "convex/server";
-import { requireAdmin } from "./permissions";
+import { requireAdmin, requireResearcher } from "./permissions";
 import {
   validateAccount,
   validateNewPassword,
   validatePasswordChange,
+  validateFirstName,
 } from "../app/lib/research-validation";
 
 export const me = query({
@@ -35,10 +36,24 @@ export const me = query({
     return user?.active
       ? {
           account: user.account,
+          firstName: user.firstName ?? "",
           role: user.role,
           mustChangePassword: user.mustChangePassword,
         }
       : null;
+  },
+});
+export const updateProfile = mutation({
+  args: { firstName: v.string() },
+  handler: async (ctx, args) => {
+    const user = await requireResearcher(ctx);
+    let firstName: string;
+    try {
+      firstName = validateFirstName(args.firstName);
+    } catch {
+      throw new ConvexError("Enter a first name of up to 60 letters.");
+    }
+    await ctx.db.patch(user._id, { firstName });
   },
 });
 export const list = query({

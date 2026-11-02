@@ -39,6 +39,12 @@ export function validateAccount(account: string) {
     throw new Error("Use a valid email address or username.");
   return normalized;
 }
+export function validateFirstName(input: string) {
+  const value = input.trim().replace(/\s+/g, " ");
+  if (!/^[\p{L}\p{M}][\p{L}\p{M} .'-]{0,59}$/u.test(value))
+    throw new Error("Enter a first name of up to 60 letters.");
+  return value;
+}
 export function validateNewPassword(password: string, account: string) {
   if (
     password.length < 12 ||

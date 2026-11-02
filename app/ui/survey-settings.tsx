@@ -62,11 +62,12 @@ export function SurveySettings() {
         containing participant information.
       </p>
       <Button
+        loading={busy}
         className="pill-button"
         disabled={busy || current === undefined}
         type="submit"
       >
-        {busy ? "Saving…" : "Save survey link"}
+        Save survey link
       </Button>
       <p role="status">{status}</p>
     </form>

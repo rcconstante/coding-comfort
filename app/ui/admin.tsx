@@ -15,6 +15,10 @@ import { ConvexError } from "convex/values";
 import { api } from "../../convex/_generated/api";
 import type { Id, Doc } from "../../convex/_generated/dataModel";
 import { Button } from "./button";
+import { LoadingState, EmptyState } from "./loading-state";
+import { DatePicker } from "./date-picker";
+import { ProfileMenu } from "./profile-menu";
+import { ProfileSettings } from "./profile-settings";
 import { subscales } from "../lib/dass";
 import {
   validateAccount,
@@ -54,6 +58,7 @@ function SignOut() {
       variant="ghost"
       className="pill-button pill-secondary"
       disabled={busy}
+      loading={busy}
       onClick={async () => {
         setBusy(true);
         try {
@@ -128,8 +133,13 @@ export function AdminLogin() {
               {error}
             </p>
           )}
-          <Button type="submit" className="pill-button" disabled={busy}>
-            {busy ? "Signing in…" : "Sign in"}
+          <Button
+            loading={busy}
+            type="submit"
+            className="pill-button"
+            disabled={busy}
+          >
+            Sign in
           </Button>
         </form>
         <p className="admin-help">
@@ -143,17 +153,19 @@ export function AdminLogin() {
 }
 function PasswordChange({
   account,
-  onDone,
+  requiredChange = false,
 }: {
   account: string;
-  onDone?: () => void;
+  requiredChange?: boolean;
 }) {
   const change = useAction(api.researchers.changePassword);
+  const [success, setSuccess] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   async function submit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
+    setSuccess("");
     const data = new FormData(form);
     const newPassword = String(data.get("newPassword"));
     const currentPassword = String(data.get("currentPassword"));
@@ -177,7 +189,7 @@ function PasswordChange({
         newPassword,
       });
       form.reset();
-      onDone?.();
+      setSuccess("Password updated.");
     } catch (error) {
       setError(errorText(error));
     } finally {
@@ -186,10 +198,12 @@ function PasswordChange({
   }
   return (
     <section className="surface admin-password">
-      <h1>Set a private password</h1>
+      <h2>{requiredChange ? "Set a private password" : "Change password"}</h2>
       <p>
-        Before accessing participant data, replace your temporary password. Use
-        12–128 characters and a password different from your email.
+        {requiredChange
+          ? "Replace your temporary password before accessing participant data. "
+          : "Choose a new password for your account. "}
+        Use 12–128 characters and a password different from your email.
       </p>
       <form onSubmit={submit}>
         <label>
@@ -229,9 +243,15 @@ function PasswordChange({
             {error}
           </p>
         )}
-        <Button type="submit" className="pill-button" disabled={busy}>
-          {busy ? "Updating…" : "Update password"}
+        <Button
+          loading={busy}
+          type="submit"
+          className="pill-button"
+          disabled={busy}
+        >
+          Update password
         </Button>
+        {success && <p role="status">{success}</p>}
       </form>
     </section>
   );
@@ -239,11 +259,11 @@ function PasswordChange({
 export function AdminDashboard() {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const me = useQuery(api.researchers.me, isAuthenticated ? {} : "skip");
-  const [password, setPassword] = useState(false);
+  const [tab, setTab] = useState("overview");
   if (isLoading || (isAuthenticated && me === undefined))
     return (
-      <main className="page-loading" aria-busy="true">
-        Loading researcher access…
+      <main className="page-loading">
+        <LoadingState label="Researcher access" />
       </main>
     );
   if (!isAuthenticated)
@@ -256,96 +276,115 @@ export function AdminDashboard() {
     return (
       <main className="page-loading">
         <div>
-          <h1>Access is not available</h1>
-          <p>Your account does not have active researcher access.</p>
+          <EmptyState
+            title="Access is not available"
+            description="Your account does not have active researcher access."
+          />
           <SignOut />
         </div>
       </main>
     );
+  const tabs = [
+    "overview",
+    "screenings",
+    "feedback",
+    ...(me.role === "admin" ? ["questions", "users", "survey"] : []),
+  ];
+  const activeTab = tabs.includes(tab) || tab === "settings" ? tab : "overview";
+  const titles: Record<string, string> = {
+    overview: "Dashboard",
+    screenings: "Screenings",
+    feedback: "Experience",
+    questions: "Questionnaire",
+    users: "Users",
+    survey: "Survey",
+  };
   return (
     <div className="site admin-site">
       <header className="admin-header page-width">
         <Logo />
-        <div>
-          <span>{me.account}</span>
-          <span className="admin-role">{me.role}</span>
-          <SignOut />
-        </div>
+        {!me.mustChangePassword && (
+          <nav className="admin-header-nav" aria-label="Research dashboard">
+            <ul>
+              {tabs.map((key) => (
+                <li key={key}>
+                  <button
+                    type="button"
+                    aria-current={activeTab === key ? "page" : undefined}
+                    onClick={() => setTab(key)}
+                  >
+                    {titles[key]}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+        <ProfileMenu
+          name={me.firstName || (me.role === "admin" ? "Admin" : "Researcher")}
+          role={me.role === "admin" ? "Administrator" : "Researcher"}
+          onSettings={() => setTab("settings")}
+        />
       </header>
       <main className="admin-main page-width">
-        {me.mustChangePassword || password ? (
-          <PasswordChange
-            account={me.account}
-            onDone={() => setPassword(false)}
-          />
+        {me.mustChangePassword ? (
+          <>
+            <div className="admin-title">
+              <h1>Secure your account</h1>
+            </div>
+            <PasswordChange account={me.account} requiredChange />
+          </>
         ) : (
-          <ResearchPanel me={me} changePassword={() => setPassword(true)} />
+          <ResearchPanel me={me} tab={activeTab} />
         )}
       </main>
     </div>
   );
 }
+
 type Researcher = {
   account: string;
+  firstName: string;
   role: "admin" | "researcher";
   mustChangePassword: boolean;
 };
-function ResearchPanel({
-  me,
-  changePassword,
-}: {
-  me: Researcher;
-  changePassword: () => void;
-}) {
-  const [tab, setTab] = useState("overview");
-  const tabs = [
-    "overview",
-    "screenings",
-    "feedback",
-    ...(me.role === "admin" ? ["questions", "users", "survey", "data"] : []),
-  ];
+function ResearchPanel({ me, tab }: { me: Researcher; tab: string }) {
+  const titles: Record<string, string> = {
+    overview: "Research Dashboard",
+    screenings: "Screening Responses",
+    feedback: "Experience Responses",
+    questions: "Questionnaire",
+    users: "Researcher Accounts",
+    survey: "External Survey",
+    settings: "Settings",
+  };
   return (
     <>
       <div className="admin-title">
         <div>
-          <span className="admin-kicker">Consented research data</span>
-          <h1>Research Dashboard</h1>
+          <span className="admin-kicker">
+            Coding Comfort · Research workspace
+          </span>
+          <h1>{titles[tab]}</h1>
           <p>
-            Monitor participation, review screening results, and collect website
-            feedback.
+            {tab === "settings"
+              ? "Manage your profile, password, and pilot data."
+              : "Review consented submissions and manage your study."}
           </p>
         </div>
-        <Button
-          variant="ghost"
-          className="pill-button pill-secondary"
-          onClick={changePassword}
-        >
-          Change password
-        </Button>
       </div>
-      <nav className="admin-tabs" aria-label="Research dashboard">
-        <ul>
-          {tabs.map((key) => (
-            <li key={key}>
-              <button
-                type="button"
-                aria-current={tab === key ? "page" : undefined}
-                onClick={() => setTab(key)}
-              >
-                {key[0].toUpperCase() + key.slice(1)}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
       {tab === "overview" ? (
         <Overview />
       ) : tab === "screenings" ? (
         <Records kind="screenings" canEdit={me.role === "admin"} />
       ) : tab === "feedback" ? (
         <Records kind="feedback" canEdit={me.role === "admin"} />
-      ) : tab === "data" ? (
-        <DataManagement />
+      ) : tab === "settings" ? (
+        <div className="admin-settings">
+          <ProfileSettings firstName={me.firstName} account={me.account} />
+          <PasswordChange account={me.account} />
+          {me.role === "admin" && <DataManagement />}
+        </div>
       ) : tab === "survey" ? (
         <SurveySettings />
       ) : tab === "questions" ? (
@@ -360,7 +399,7 @@ const levels = ["normal", "mild", "moderate", "severe", "extremelySevere"];
 const labels = ["Normal", "Mild", "Moderate", "Severe", "Extremely severe"];
 function Overview() {
   const summary = useQuery(api.research.summary);
-  if (!summary) return <p aria-busy="true">Loading research summary…</p>;
+  if (!summary) return <LoadingState label="Research summary" />;
   return (
     <>
       <div className="admin-metrics">
@@ -420,7 +459,10 @@ function Overview() {
             ))}
           </div>
         ) : (
-          <p>No feedback has been submitted yet.</p>
+          <EmptyState
+            title="No experiences yet"
+            description="Submitted experience responses will appear here."
+          />
         )}
       </section>
     </>
@@ -474,31 +516,27 @@ function Records({
     <>
       <div className="surface records-controls">
         <div>
-          <label>
-            From
-            <input
-              type="date"
-              value={from}
-              onChange={(event) => setFrom(event.target.value)}
-            />
-          </label>
-          <label>
-            Through
-            <input
-              type="date"
-              value={to}
-              onChange={(event) => setTo(event.target.value)}
-              min={from}
-            />
-          </label>
+          <DatePicker
+            label="From"
+            value={from}
+            onChange={setFrom}
+            max={to || undefined}
+          />
+          <DatePicker
+            label="Through"
+            value={to}
+            onChange={setTo}
+            min={from || undefined}
+          />
           <span>Philippine time (UTC+8)</span>
         </div>
         <Button
+          loading={exporting}
           className="pill-button"
           disabled={exporting || invalid}
           onClick={download}
         >
-          {exporting ? "Preparing Excel…" : "Export Excel"}
+          Export Excel
         </Button>
       </div>
       {invalid ? (
@@ -595,21 +633,23 @@ function ScreeningRecords({
         </table>
       </div>
       {status === "LoadingFirstPage" ? (
-        <p aria-busy="true">Loading screening responses…</p>
+        <LoadingState label="Screening responses" />
       ) : !results.length ? (
-        <p className="admin-empty">
-          No screening submissions in this date range.
-        </p>
+        <EmptyState
+          title="No screening responses yet"
+          description="Responses will appear here after participants choose to submit them. You can also try a different date range."
+        />
       ) : null}
       {expanded && <ScreeningResponseDetail id={expanded} />}
       {status === "CanLoadMore" || status === "LoadingMore" ? (
         <Button
+          loading={status === "LoadingMore"}
           className="pill-button pill-secondary"
           variant="ghost"
           disabled={status === "LoadingMore"}
           onClick={() => loadMore(25)}
         >
-          {status === "LoadingMore" ? "Loading…" : "Load more"}
+          Load more
         </Button>
       ) : null}
     </section>
@@ -670,18 +710,22 @@ function FeedbackRecords({
         </table>
       </div>
       {status === "LoadingFirstPage" ? (
-        <p aria-busy="true">Loading feedback…</p>
+        <LoadingState label="Experience responses" />
       ) : !results.length ? (
-        <p className="admin-empty">No evaluations in this date range.</p>
+        <EmptyState
+          title="No experience responses yet"
+          description="Responses will appear here after participants complete the experience questionnaire. You can also try a different date range."
+        />
       ) : null}
       {status === "CanLoadMore" || status === "LoadingMore" ? (
         <Button
+          loading={status === "LoadingMore"}
           className="pill-button pill-secondary"
           variant="ghost"
           disabled={status === "LoadingMore"}
           onClick={() => loadMore(25)}
         >
-          {status === "LoadingMore" ? "Loading…" : "Load more"}
+          Load more
         </Button>
       ) : null}
     </section>
@@ -694,8 +738,13 @@ function QuestionsEditor() {
     <>
       {instrument ? (
         <InstrumentEditor key={instrument.version} initial={instrument} />
+      ) : instrument === undefined ? (
+        <LoadingState label="Questionnaire" />
       ) : (
-        <p>Loading the active questionnaire…</p>
+        <EmptyState
+          title="No questionnaire available"
+          description="The study questionnaire has not been published yet."
+        />
       )}
       {history && (
         <p className="admin-explanation">
@@ -811,11 +860,12 @@ function InstrumentEditor({ initial }: { initial: Instrument }) {
       </label>
       <div className="form-actions">
         <Button
+          loading={busy}
           className="pill-button"
           disabled={busy || !approved}
           type="submit"
         >
-          {busy ? "Publishing…" : "Publish new version"}
+          Publish new version
         </Button>
       </div>
       {message && <p role="status">{message}</p>}
@@ -893,8 +943,13 @@ function Users({ current }: { current: string }) {
               <option value="admin">Administrator</option>
             </select>
           </label>
-          <Button type="submit" className="pill-button" disabled={busy}>
-            {busy ? "Creating…" : "Create account"}
+          <Button
+            loading={busy}
+            type="submit"
+            className="pill-button"
+            disabled={busy}
+          >
+            Create account
           </Button>
         </div>
         {message && <p role="status">{message}</p>}
@@ -910,16 +965,17 @@ function Users({ current }: { current: string }) {
             />
           ))
         ) : (
-          <p aria-busy="true">Loading accounts…</p>
+          <LoadingState label="Researcher accounts" />
         )}
         {(status === "CanLoadMore" || status === "LoadingMore") && (
           <Button
+            loading={status === "LoadingMore"}
             variant="ghost"
             className="pill-button pill-secondary"
             disabled={status === "LoadingMore"}
             onClick={() => loadMore(25)}
           >
-            {status === "LoadingMore" ? "Loading…" : "Load more accounts"}
+            Load more accounts
           </Button>
         )}
       </section>
@@ -968,6 +1024,7 @@ function UserRow({ user, self }: { user: Doc<"researchers">; self: boolean }) {
         Active
       </label>
       <Button
+        loading={busy}
         variant="ghost"
         className="pill-button pill-secondary"
         disabled={
@@ -985,7 +1042,7 @@ function UserRow({ user, self }: { user: Doc<"researchers">; self: boolean }) {
           }
         }}
       >
-        {busy ? "Saving…" : "Save access"}
+        Save access
       </Button>
       {error && (
         <p className="field-error" role="alert">
@@ -1019,8 +1076,10 @@ function ScreeningResponseDetail({ id }: { id: Id<"screenings"> }) {
             ))}
           </ol>
         </>
+      ) : data === undefined ? (
+        <LoadingState label="Submitted answers" />
       ) : (
-        <p aria-busy="true">Loading submitted wording…</p>
+        <EmptyState title="Record no longer available" />
       )}
     </div>
   );

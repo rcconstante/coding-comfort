@@ -185,3 +185,41 @@ test("record corrections enforce admin access, update derived totals, preserve h
   });
   assert.equal((await admin.query(api.research.summary, {})).evaluations, 1);
 });
+
+test("profile updates affect only the signed-in active staff member", async () => {
+  const t = convexTest(schema, modules);
+  const [a, b, pending] = await t.run(async (ctx) => {
+    const ids = [];
+    for (let i = 0; i < 3; i++) {
+      const userId = await ctx.db.insert("users", {});
+      await ctx.db.insert("researchers", {
+        userId,
+        account: `staff${i}`,
+        role: "researcher",
+        active: true,
+        mustChangePassword: i === 2,
+      });
+      ids.push(userId);
+    }
+    return ids;
+  });
+  await assert.rejects(
+    t.mutation(api.researchers.updateProfile, { firstName: "Alex" }),
+  );
+  await assert.rejects(
+    t
+      .withIdentity({ subject: pending })
+      .mutation(api.researchers.updateProfile, { firstName: "Alex" }),
+  );
+  const staff = t.withIdentity({ subject: a });
+  await assert.rejects(
+    staff.mutation(api.researchers.updateProfile, { firstName: "<script>" }),
+  );
+  await staff.mutation(api.researchers.updateProfile, { firstName: "Alex" });
+  assert.equal((await staff.query(api.researchers.me, {})).firstName, "Alex");
+  assert.equal(
+    (await t.withIdentity({ subject: b }).query(api.researchers.me, {}))
+      .firstName,
+    "",
+  );
+});

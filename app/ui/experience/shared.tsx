@@ -25,6 +25,7 @@ export function Asset({
       width={size}
       height={size}
       sizes={`${size}px`}
+      style={{ height: "auto" }}
       className={`ui-asset ${className}`}
     />
   );

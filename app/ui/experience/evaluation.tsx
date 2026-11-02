@@ -163,8 +163,9 @@ export function Evaluation({ locale }: { locale: Locale }) {
               !agreed || ratings.some((value) => !value) || status === "saving"
             }
             type="submit"
+            loading={status === "saving"}
           >
-            {status === "saving" ? t.submitting : t.submit}
+            {t.submit}
           </Button>
         </div>
       </form>

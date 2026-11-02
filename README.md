@@ -110,6 +110,16 @@ The optional Google Forms link appears on the experience page, including after i
 
 Admins see **Edit** on screening and experience-response rows. They can correct answers/ratings, comments, and language. Each correction requires a reason, retains a prior snapshot in protected correction history, checks for conflicting edits, recalculates screening scores server-side, and updates aggregate counts/averages. Participant codes, consent records, questionnaire versions, and original submission dates are preserved. Corrected-at timestamps appear in the table and new Excel exports. Existing participant browser results and old exports do not change.
 
-**Admin → Data → Reset pilot data** opens a confirmation modal. Type `RESET PILOT DATA` and confirm to permanently clear participant records, screenings, experience responses, correction history, and aggregate statistics across this deployment. Accounts, questionnaire versions, survey configuration, audit events, security rate limits, and encrypted AI recovery records are retained. External Google Forms responses, downloaded files, and participant browser data are outside this reset. Export first if necessary. Testers should use **End session** before starting a fresh test afterward.
+**Profile menu → Settings → Reset pilot data** opens a confirmation modal. Type `RESET PILOT DATA` and confirm to permanently clear participant records, screenings, experience responses, correction history, and aggregate statistics across this deployment. Accounts, questionnaire versions, survey configuration, audit events, security rate limits, and encrypted AI recovery records are retained. External Google Forms responses, downloaded files, and participant browser data are outside this reset. Export first if necessary. Testers should use **End session** before starting a fresh test afterward.
 
 Reset work runs in bounded scheduled batches. New research submissions and edits are blocked while it runs. Progress is reactive; **Resume reset** can requeue an interrupted batch safely. Exports fail if a reset overlaps their preparation. No production reset is performed by installation or deployment. Only an active admin who has replaced the initial password can start a reset or edit a record.
+
+## Research workspace design
+
+Research navigation sits in the header and scrolls horizontally on narrow screens. The profile icon opens Settings and Log out. Staff can save their first name in Settings; accounts without a saved name show their role until a name is entered. Settings contains Profile, Change password, and (for admins) Reset research data. Required initial password changes still block research access.
+
+Actions keep stable button labels with a spinner while pending. Research lists use purple loading states with supplied illustrations and friendly empty states. Date filters use a keyboard-accessible calendar popover, keep Philippine calendar dates intact, and allow clearing a selected date. Reset settings show three count cards, progress, and expandable retention details; the existing confirmation modal and server protections remain in place.
+
+Research settings preview (synthetic development data):
+
+![Research settings](docs/screenshots/admin-settings.jpg)

@@ -10,6 +10,9 @@ import { RESET_PHRASE, validateCorrectionReason } from "../lib/data-management";
 import { calculateResults } from "../lib/dass";
 import { validateEvaluation } from "../lib/research-validation";
 import { Button } from "./button";
+import { LoadingState } from "./loading-state";
+import { Spinner } from "./spinner";
+import { Asset } from "./experience/shared";
 
 function message(error: unknown) {
   return error instanceof ConvexError && typeof error.data === "string"
@@ -56,35 +59,86 @@ export function DataManagement() {
   const [error, setError] = useState("");
   const resetting = status?.status === "resetting";
   return (
-    <section className="surface instrument-editor">
-      <h2>Reset pilot research data</h2>
-      <p>
-        Export any records you need before resetting. This permanently clears
-        all participant records, screening submissions, experience responses,
-        correction history, and research totals in this deployment.
-      </p>
-      <p>
-        Staff accounts, questionnaire versions, survey settings, security
-        limits, and the reset audit log are kept. This does not clear
-        participants’ browsers, downloaded Excel files, Google Forms responses,
-        or encrypted AI recovery records.
-      </p>
-      <p>
-        After resetting, testers should use End session in their browser before
-        starting a fresh test.
-      </p>
-      {totals && (
-        <p>
-          {totals.participants} participant records · {totals.screenings}{" "}
-          screenings · {totals.evaluations} experience responses
+    <section className="surface settings-section reset-settings">
+      <div className="reset-section-header">
+        <div>
+          <span className="admin-kicker">Pilot testing</span>
+          <h2>Reset research data</h2>
+          <p>Start a fresh pilot round after exporting any records you need.</p>
+        </div>
+        <span
+          className={`maintenance-badge ${resetting ? "is-running" : ""}`}
+          role="status"
+        >
+          {status === undefined ? (
+            <>
+              <Spinner />
+              Checking status
+            </>
+          ) : resetting ? (
+            <>
+              <Spinner />
+              Reset in progress
+            </>
+          ) : (
+            "Ready for testing"
+          )}
+        </span>
+      </div>
+      {totals ? (
+        <div className="reset-counts">
+          {[
+            {
+              label: "Participant records",
+              value: totals.participants,
+              asset: "help" as const,
+            },
+            {
+              label: "Screenings",
+              value: totals.screenings,
+              asset: "note" as const,
+            },
+            {
+              label: "Experience responses",
+              value: totals.evaluations,
+              asset: "heart" as const,
+            },
+          ].map((item) => (
+            <div className="reset-count" key={item.label}>
+              <Asset name={item.asset} size={36} />
+              <strong>{item.value}</strong>
+              <span>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <LoadingState label="Pilot data" />
+      )}
+      {resetting && (
+        <p className="reset-progress" role="status">
+          {status.deleted} records cleared. New research submissions are paused
+          until the reset finishes.
         </p>
       )}
-      <p role="status">
-        {resetting
-          ? `Reset in progress. ${status.deleted} records cleared. Research submissions are temporarily paused.`
-          : status?.status === "complete"
-            ? "The last reset is complete. Research submissions are available."
-            : "No reset is running."}
+      <div className="reset-notice">
+        <strong>Resetting is permanent.</strong>
+        <p>
+          This clears participant records, screenings, experience responses,
+          correction history, and totals in this deployment.
+        </p>
+      </div>
+      <details className="privacy-details reset-details">
+        <summary>What is kept?</summary>
+        <p>
+          Staff accounts, questionnaire versions, survey settings, security
+          limits, and audit events remain. Participants’ browser data,
+          downloaded Excel files, Google Forms responses, and encrypted AI
+          recovery records are outside this reset.
+        </p>
+      </details>
+      <p className="reset-next-step">
+        After a reset, ask testers to select <strong>End session</strong> in
+        their browser before starting again.
       </p>
       <Dialog.Root
         open={open}
@@ -153,11 +207,12 @@ export function DataManagement() {
                 </Button>
               </Dialog.Close>
               <Button
+                loading={busy}
                 className="pill-button"
                 type="submit"
                 disabled={confirmation !== RESET_PHRASE || busy}
               >
-                {busy ? "Starting…" : "Confirm reset"}
+                Confirm reset
               </Button>
             </div>
           </form>
@@ -383,14 +438,19 @@ function RecordForm({
             Cancel
           </Button>
         </Dialog.Close>
-        <Button type="submit" className="pill-button" disabled={busy}>
-          {busy ? "Saving…" : "Save correction"}
+        <Button
+          loading={busy}
+          type="submit"
+          className="pill-button"
+          disabled={busy}
+        >
+          Save correction
         </Button>
       </div>
       <details className="privacy-details correction-history">
         <summary>Correction history</summary>
         {revisions === undefined ? (
-          <p>Loading…</p>
+          <LoadingState label="Correction history" />
         ) : !revisions.length ? (
           <p>No previous corrections.</p>
         ) : (
