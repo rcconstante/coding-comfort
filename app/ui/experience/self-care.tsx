@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import bottomLandscape from "../../../public/bottom.webp";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "../button";
@@ -315,6 +317,13 @@ export function SelfCare({
               />
             </Link>
           ))}
+        </div>
+        <div className="self-care-landscape" aria-hidden="true">
+          <Image
+            src={bottomLandscape}
+            alt=""
+            sizes="(max-width: 1064px) 100vw, 1000px"
+          />
         </div>
       </>
     );

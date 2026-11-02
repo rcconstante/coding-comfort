@@ -2742,3 +2742,21 @@ html {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.self-care-landscape {
+  position: relative;
+  height: clamp(80px, 18vw, 200px);
+  margin-top: 32px;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: 0 0 24px 24px;
+}
+.self-care-landscape img {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  transform: translateX(-50%);
+}
